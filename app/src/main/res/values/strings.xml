@@ -1,11 +1,16 @@
 <resources>
-    <string name="app_name">gorgullebelle</string>
+    <string name="app_name">Görgülle Belle</string>
         <string name="hello">Hi</string>
     <string name="create_account">Create an Account</string>
     <string name="welcome">Welcome Back</string>
     <string name="first_name">First Name</string>
     <string name="last_name">Last Name</string>
     <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="hide_password">Show password</string>
+    <string name="show_password">Hide password</string>
+    <string name="policy">By continuing you agree to our Terms of Service and Privacy Policy</string>
+
 
 
 
