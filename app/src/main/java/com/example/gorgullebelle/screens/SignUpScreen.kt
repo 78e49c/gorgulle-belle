@@ -16,9 +16,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.gorgullebelle.R
+import com.example.gorgullebelle.components.CheckboxCompoment
 import com.example.gorgullebelle.components.HeadingTextComponent
 import com.example.gorgullebelle.components.MyTextField
 import com.example.gorgullebelle.components.NormalTextComponent
+import com.example.gorgullebelle.components.PasswordTextField
 
 
 @Composable
@@ -40,19 +42,25 @@ fun SignUpScreen() {
             Column(Modifier.wrapContentSize()) {
                 MyTextField(
                     labelValue = stringResource(id = R.string.first_name)
-                    //  , painterResource(id = R.drawable.profile)
-                    , painterResource(id = R.drawable.ic_launcher_background)
+                    , painterResource(id = R.drawable.sharp_person_24)
                 )
+                Spacer(modifier = Modifier.height(10.dp))
                 MyTextField(
                     labelValue = stringResource(id = R.string.last_name)
-                    //, painterResource(id = R.drawable.profile)
-                    , painterResource(id = R.drawable.ic_launcher_foreground)
+                    , painterResource(id = R.drawable.sharp_person_24)
                 )
+                Spacer(modifier = Modifier.height(10.dp))
+
                 MyTextField(
                     labelValue = stringResource(id = R.string.email)
-                    // , painterResource(id = R.drawable.email)
-                    , painterResource(id = R.drawable.ic_launcher_background)
+                    , painterResource(id = R.drawable.baseline_email_24)
                 )
+                Spacer(modifier = Modifier.height(10.dp))
+                PasswordTextField(
+                    labelValue = stringResource(id = R.string.password)
+                    , painterResource(id = R.drawable.mail_24px)
+                )
+                CheckboxCompoment(value = stringResource(id = R.string.policy))
             }
 
 
