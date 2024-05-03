@@ -6,14 +6,15 @@ import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.gorgullebelle.app.App
-import com.example.gorgullebelle.ui.theme.SalihTheme
+import com.example.gorgullebelle.screens.SignUpScreen
+import com.example.gorgullebelle.ui.theme.GBTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            SalihTheme {
-                App()
+            GBTheme {
+                SignUpScreen()
             }
         }
     }
@@ -23,7 +24,7 @@ class MainActivity : ComponentActivity() {
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
-    SalihTheme {
-        App()
+    GBTheme {
+        SignUpScreen()
     }
 }
