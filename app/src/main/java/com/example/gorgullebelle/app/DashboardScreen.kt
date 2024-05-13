@@ -7,6 +7,7 @@ import com.example.gorgullebelle.app.navigation.Route
 
 @Composable
 fun DashboardScreen(navigate: (String) -> Unit = {}) {
+
     Button(onClick = { navigate(Route.SignUpScreen.route)}) {
         Text(text = "kdskfskı")
     }
