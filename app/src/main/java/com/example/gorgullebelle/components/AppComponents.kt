@@ -4,6 +4,11 @@ package com.example.gorgullebelle.components
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+//import androidx.compose.foundation.gestures.ModifierLocalScrollableContainerProvider.value
+//import androidx.compose.foundation.gestures.ModifierLocalScrollableContainerProvider.value
+//import androidx.compose.foundation.gestures.ModifierLocalScrollableContainerProvider.value
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 //import androidx.compose.foundation.gestures.ModifierLocalScrollableContainerProvider.value
@@ -16,6 +21,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -30,7 +37,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -44,6 +55,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -61,7 +73,7 @@ fun NormalTextComponent(value: String) {
             fontSize = 24.sp,
             fontWeight = FontWeight.Normal,
             fontStyle = FontStyle.Normal
-        ), color = colorResource(id = R.color.purple_700),
+        ), color = colorResource(id = R.color.black),
         textAlign = TextAlign.Center
     )
 }
@@ -78,7 +90,7 @@ fun HeadingTextComponent(value: String) {
             fontWeight = FontWeight.Bold,
             fontStyle = FontStyle.Normal
         ),
-        color = colorResource(id = R.color.purple_700),
+        color = colorResource(id = R.color.black),
         textAlign = TextAlign.Center
     )
 }
@@ -97,12 +109,26 @@ fun MyTextField(labelValue: String, painterResource: Painter) {
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(8.dp))
-            .background(colorResource(id = R.color.background)),
+            .background(colorResource(id = R.color.over_transparent_background)),
+
         label = { Text(text = labelValue, modifier = Modifier.clip(RoundedCornerShape(20.dp))) },
         colors = TextFieldDefaults.outlinedTextFieldColors(
-            focusedBorderColor = colorResource(id = R.color.primary),
-            focusedLabelColor = colorResource(id = R.color.primary),
-            cursorColor = colorResource(id = R.color.primary),
+
+
+            unfocusedBorderColor = colorResource(id = R.color.transparent_background),
+            focusedBorderColor = colorResource(id = R.color.transparent_background),
+
+            focusedLabelColor = colorResource(id = R.color.black),
+            unfocusedLabelColor = colorResource(id = R.color.black),
+
+            focusedSupportingTextColor = colorResource(id = R.color.black),
+            unfocusedSupportingTextColor = colorResource(id = R.color.black),
+
+            focusedLeadingIconColor = colorResource(id = R.color.black),
+            unfocusedLeadingIconColor = colorResource(id = R.color.black),
+
+            cursorColor = colorResource(id = R.color.black),
+
         ), keyboardOptions = KeyboardOptions.Default,
         value = textValue.value,
         onValueChange = {
@@ -136,14 +162,36 @@ fun PasswordTextField(labelValue: String, painterResource: Painter) {
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(8.dp))
-            .background(colorResource(id = R.color.background)),
+            .background(colorResource(id = R.color.over_transparent_background)),
+
         label = { Text(text = labelValue) },
-        colors = TextFieldDefaults.outlinedTextFieldColors(
-            focusedBorderColor = colorResource(id = R.color.primary),
-            focusedLabelColor = colorResource(id = R.color.primary),
-            cursorColor = colorResource(id = R.color.primary),
-            // backgroundColor = colorResource(id = R.color.background)
-        ),
+
+        colors = TextFieldDefaults
+
+            .outlinedTextFieldColors(
+
+                unfocusedBorderColor = colorResource(id = R.color.transparent_background),
+                focusedBorderColor = colorResource(id = R.color.transparent_background),
+
+                focusedLabelColor = colorResource(id = R.color.black),
+                unfocusedLabelColor = colorResource(id = R.color.black),
+
+                focusedSupportingTextColor = colorResource(id = R.color.black),
+                unfocusedSupportingTextColor = colorResource(id = R.color.black),
+
+                focusedLeadingIconColor = colorResource(id = R.color.black),
+                unfocusedLeadingIconColor = colorResource(id = R.color.black),
+
+                focusedTrailingIconColor = colorResource(id = R.color.black),
+                unfocusedTrailingIconColor = colorResource(id = R.color.black),
+
+                cursorColor = colorResource(id = R.color.black),
+
+                )
+
+
+        ,
+
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password ),
         value = password.value,
         onValueChange = {
@@ -227,4 +275,40 @@ fun ClickableTextComponent(value: String){
          }
  }
  )
+}
+
+@Composable
+fun ButtonComponent(value: String){
+    Button(
+        onClick = { /*TODO*/ },
+        modifier =
+        Modifier
+            .fillMaxWidth()
+            .heightIn(48.dp),
+        contentPadding = PaddingValues(),
+        colors = ButtonDefaults.buttonColors(Color.Transparent)
+
+    ) {
+
+        Box( modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(48.dp)
+            .background(
+                brush = Brush.horizontalGradient(
+                    listOf(
+                        colorResource(id = R.color.primary),
+                        colorResource(id = R.color.secondary)
+                    )
+                ),
+                shape = RoundedCornerShape(50.dp)
+            ),
+            contentAlignment = Alignment.Center
+            )
+        {
+            Text(text = value,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
+    }
 }
