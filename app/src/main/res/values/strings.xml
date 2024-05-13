@@ -11,7 +11,8 @@
     <string name="show_password">Hide password</string>
     <string name="policy">By continuing you agree to our Terms of Service and Privacy Policy</string>
 
-
+    <string name="register">Register</string>
+    <string name="login">Login</string>
 
 
 </resources>
