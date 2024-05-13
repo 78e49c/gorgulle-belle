@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import com.example.gorgullebelle.R
 import com.example.gorgullebelle.components.ButtonComponent
 import com.example.gorgullebelle.components.CheckboxCompoment
+import com.example.gorgullebelle.components.ClickableLoginTextComponent
 import com.example.gorgullebelle.components.HeadingTextComponent
 import com.example.gorgullebelle.components.MyTextField
 import com.example.gorgullebelle.components.NormalTextComponent
@@ -84,9 +85,12 @@ fun SignUpScreen(navigate: (String) -> Unit = {}) {
                     , painterResource(id = R.drawable.baseline_key_24)
                 )
                 CheckboxCompoment(value = stringResource(id = R.string.policy))
-                
+
+                Spacer(modifier = Modifier.height(160.dp))
+
                 ButtonComponent(value = stringResource(id = R.string.register))
 
+                ClickableLoginTextComponent()
 
             }
 
