@@ -155,10 +155,13 @@ fun PasswordTextField(labelValue: String, painterResource: Painter) {
 
         trailingIcon = {
             val iconImage = if (passwordVisible.value) {
-                Icons.Filled.Favorite
+                painterResource(id = R.drawable.visibility_24px)
+
             } else {
-                Icons.Filled.Star
+                painterResource(id = R.drawable.visibility_off_24px)
             }
+
+
             var description = if(passwordVisible.value){
                 stringResource(id = R.string.hide_password)
             } else {
@@ -167,7 +170,7 @@ fun PasswordTextField(labelValue: String, painterResource: Painter) {
 
             IconButton(onClick = {passwordVisible.value = !passwordVisible.value})
             {
-                Icon(imageVector = iconImage,contentDescription = description)
+                Icon(painter = iconImage,contentDescription = description)
             }
 
         },
