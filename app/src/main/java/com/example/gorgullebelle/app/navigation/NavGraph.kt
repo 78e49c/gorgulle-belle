@@ -4,7 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+
 import com.example.gorgullebelle.app.DashboardScreen
+import com.example.gorgullebelle.app.SignInScreen
 import com.example.gorgullebelle.app.SignUpScreen
 
 @Composable
@@ -14,6 +16,8 @@ fun NavGraph() {
     NavHost(
         navController = navController,
         startDestination = Route.DashboardScreen.route
+
+
     ) {
         composable(Route.SignUpScreen.route) {
             SignUpScreen(
@@ -22,8 +26,17 @@ fun NavGraph() {
                 }
             )
         }
+
         composable(Route.DashboardScreen.route) {
             DashboardScreen(
+                navigate = { route ->
+                    navController.navigate(route)
+                }
+            )
+        }
+
+        composable(Route.SignInScreen.route) {
+            SignInScreen(
                 navigate = { route ->
                     navController.navigate(route)
                 }
