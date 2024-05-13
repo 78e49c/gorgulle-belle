@@ -58,7 +58,7 @@ fun SignUpScreen() {
                 Spacer(modifier = Modifier.height(10.dp))
                 PasswordTextField(
                     labelValue = stringResource(id = R.string.password)
-                    , painterResource(id = R.drawable.mail_24px)
+                    , painterResource(id = R.drawable.baseline_key_24)
                 )
                 CheckboxCompoment(value = stringResource(id = R.string.policy))
             }
