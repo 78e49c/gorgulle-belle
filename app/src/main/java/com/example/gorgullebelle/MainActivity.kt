@@ -5,8 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.gorgullebelle.app.App
-import com.example.gorgullebelle.screens.SignUpScreen
+import com.example.gorgullebelle.app.navigation.NavGraph
 import com.example.gorgullebelle.ui.theme.GBTheme
 
 class MainActivity : ComponentActivity() {
@@ -14,7 +13,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             GBTheme {
-                SignUpScreen()
+                NavGraph()
             }
         }
     }
@@ -25,6 +24,6 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun GreetingPreview() {
     GBTheme {
-        SignUpScreen()
+        NavGraph()
     }
 }
