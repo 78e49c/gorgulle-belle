@@ -1,7 +1,10 @@
 <resources>
     <string name="app_name">Görgülle Belle</string>
         <string name="hello">Hi</string>
-    <string name="create_account">Create an Account</string>
+
+    <string name="sign_up">Hesap oluştur</string>
+    <string name="sign_in">Giriş yap</string>
+
     <string name="welcome">Welcome Back</string>
     <string name="first_name">First Name</string>
     <string name="last_name">Last Name</string>
