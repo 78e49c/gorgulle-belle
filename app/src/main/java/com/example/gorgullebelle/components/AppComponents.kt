@@ -2,28 +2,20 @@ package com.example.gorgullebelle.components
 
 
 import android.util.Log
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 //import androidx.compose.foundation.gestures.ModifierLocalScrollableContainerProvider.value
-import androidx.compose.foundation.interaction.MutableInteractionSource
 //import androidx.compose.foundation.gestures.ModifierLocalScrollableContainerProvider.value
 //import androidx.compose.foundation.gestures.ModifierLocalScrollableContainerProvider.value
 //import androidx.compose.foundation.gestures.ModifierLocalScrollableContainerProvider.value
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 //import androidx.compose.foundation.gestures.ModifierLocalScrollableContainerProvider.value
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
@@ -41,13 +33,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -62,7 +51,6 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.gorgullebelle.R
@@ -128,27 +116,7 @@ fun MyTextField(labelValue: String, painterResource: Painter) {
         },
 
 
-
-        colors = TextFieldDefaults
-
-            .textFieldColors(
-
-            containerColor = colorResource(id = R.color.transparent_background),
-
-            focusedLabelColor = colorResource(id = R.color.black),
-            unfocusedLabelColor = colorResource(id = R.color.black),
-
-            focusedSupportingTextColor = colorResource(id = R.color.black),
-            unfocusedSupportingTextColor = colorResource(id = R.color.black),
-
-            focusedLeadingIconColor = colorResource(id = R.color.black),
-            unfocusedLeadingIconColor = colorResource(id = R.color.black),
-
-            focusedTrailingIconColor = colorResource(id = R.color.black),
-            unfocusedTrailingIconColor = colorResource(id = R.color.black),
-
-            cursorColor = colorResource(id = R.color.black)
-            )
+        colors = TextFieldDefaults.tfc1()
         ,
         singleLine = true,
 
@@ -164,6 +132,63 @@ fun MyTextField(labelValue: String, painterResource: Painter) {
     )
 
 }
+
+
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TextFieldDefaults.tfc1(): TextFieldColors = this
+
+    .textFieldColors(
+
+        containerColor = colorResource(id = R.color.transparent_background),
+
+        focusedLabelColor = colorResource(id = R.color.black),
+        unfocusedLabelColor = colorResource(id = R.color.black),
+
+        focusedSupportingTextColor = colorResource(id = R.color.black),
+        unfocusedSupportingTextColor = colorResource(id = R.color.black),
+
+        focusedLeadingIconColor = colorResource(id = R.color.black),
+        unfocusedLeadingIconColor = colorResource(id = R.color.black),
+
+        focusedTrailingIconColor = colorResource(id = R.color.black),
+        unfocusedTrailingIconColor = colorResource(id = R.color.black),
+
+        cursorColor = colorResource(id = R.color.black)
+    )
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TextFieldDefaults.tfc2(): TextFieldColors = this
+
+    .outlinedTextFieldColors(
+
+        unfocusedBorderColor = colorResource(id = R.color.transparent_background),
+        focusedBorderColor = colorResource(id = R.color.transparent_background),
+
+        focusedLabelColor = colorResource(id = R.color.black),
+        unfocusedLabelColor = colorResource(id = R.color.black),
+
+        focusedSupportingTextColor = colorResource(id = R.color.black),
+        unfocusedSupportingTextColor = colorResource(id = R.color.black),
+
+        focusedLeadingIconColor = colorResource(id = R.color.black),
+        unfocusedLeadingIconColor = colorResource(id = R.color.black),
+
+        focusedTrailingIconColor = colorResource(id = R.color.black),
+        unfocusedTrailingIconColor = colorResource(id = R.color.black),
+
+        cursorColor = colorResource(id = R.color.black),
+
+        )
+
+
+
+
+
 
 
 
@@ -186,7 +211,7 @@ fun PasswordTextField(labelValue: String, painterResource: Painter) {
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(8.dp))
-           // .background(colorResource(id = R.color.over_transparent_background))
+            .background(colorResource(id = R.color.half_transparent_background))
                 ,
 
         label = { Text(text = labelValue) },
@@ -342,17 +367,14 @@ fun ButtonComponent(value: String){
 
 @Composable
 //onTextSelected: (String) -> Unit
-fun ClickableLoginTextComponent(){
-    val text1 = "Already have an account? "
-    val text2 = "Login "
-
+fun ClickableLoginTextComponent(navigate: (String) -> Unit = {}, route: String, clickable: String, plain: String ){
 
     val annotatedString = buildAnnotatedString {
-        append(text1)
+        append(plain)
 
         withStyle(style = SpanStyle(color = colorResource(id = R.color.purple_700))){
-            pushStringAnnotation(tag = text2, annotation = text2)
-            append(text2)
+            pushStringAnnotation(tag = clickable, annotation = clickable)
+            append(clickable)
         }
 
 
@@ -360,9 +382,9 @@ fun ClickableLoginTextComponent(){
     ClickableText(
         modifier = Modifier
             .fillMaxWidth()
-            .heightIn(min = 40.dp),
+            .heightIn(min = 20.dp),
         style = TextStyle(
-            fontSize = 21.sp,
+            fontSize = 20.sp,
             fontWeight = FontWeight.Normal,
             fontStyle = FontStyle.Normal,
             textAlign = TextAlign.Center
@@ -374,13 +396,27 @@ fun ClickableLoginTextComponent(){
         annotatedString.getStringAnnotations(offset,offset)
             .firstOrNull()?.also { span ->
                 Log.d("ClickableTextComponent","{$span}")
-                if(span.item == text2){
-                   // navigate(Route.SignUpScreen.route)
+                if(span.item == clickable){
+                    Log.d("","nav")
+                    navigate.invoke(route)
                 }
             }
     }
     )
 }
+
+@Composable
+fun Modifier.gradientBackground(): Modifier = this
+    .background(
+        brush = Brush.linearGradient(
+            colors =  listOf(
+                colorResource(id = R.color.grad_3),
+                colorResource(id = R.color.grad_2),
+                colorResource(id = R.color.grad_1),
+                colorResource(id = R.color.grad_0)
+            )
+        )
+    )
 
 
 
