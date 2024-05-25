@@ -6,5 +6,6 @@ sealed class Route(
     object SignUpScreen : Route("signUpScreen")
     object DashboardScreen : Route("dashboardScreen")
     object SignInScreen : Route("signInScreen")
+    object ExperienceScreen : Route("experienceScreen")
 
 }
