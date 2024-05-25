@@ -8,6 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.gorgullebelle.app.DashboardScreen
 import com.example.gorgullebelle.app.SignInScreen
 import com.example.gorgullebelle.app.SignUpScreen
+import com.example.gorgullebelle.app.ExperienceScreen
 
 @Composable
 fun NavGraph() {
@@ -37,6 +38,14 @@ fun NavGraph() {
 
         composable(Route.SignInScreen.route) {
             SignInScreen(
+                navigate = { route ->
+                    navController.navigate(route)
+                }
+            )
+        }
+
+        composable(Route.ExperienceScreen.route) {
+            ExperienceScreen(
                 navigate = { route ->
                     navController.navigate(route)
                 }
