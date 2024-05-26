@@ -23,7 +23,9 @@ fun ConversationListScreen(navigate: (String) -> Unit = {}) {
     }
 
     LazyColumn(
-        modifier = Modifier.fillMaxSize().padding(8.dp)
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(8.dp)
     ) {
         itemsIndexed(messagePackages) { index, messagesFlow ->
             val messages by messagesFlow.collectAsState()
@@ -33,6 +35,7 @@ fun ConversationListScreen(navigate: (String) -> Unit = {}) {
                 lastMessage = messages.lastOrNull() ?: "No messages yet",
                 onClick = {
                     System.setSelectedPackageIndex(index)
+                    System.disableSending(index)
                     messageViewModel.updateCurrentSessionId(index)
                     navigate(Route.ExperienceScreen.route)
                 }
