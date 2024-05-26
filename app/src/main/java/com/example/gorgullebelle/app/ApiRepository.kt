@@ -30,7 +30,9 @@ class ApiRepository {
             {
                 "model": "gpt-3.5-turbo",
                 "messages": [
-                    {"role": "system", "content": "You are a teacher, never say you are an AI."},
+                    {"role": "system", "content": 
+                    
+                    "You are a teacher, never say you are an AI."},
                     $messagesJson
                 ],
                 "stream": false
@@ -40,22 +42,22 @@ class ApiRepository {
         val mediaType = "application/json; charset=utf-8".toMediaTypeOrNull()
         val body = json.toRequestBody(mediaType)
 
-        val request = Request.Builder()
-            .url(url)
-            .addHeader("Authorization", "Bearer $apiKey")
-            .post(body)
-            .build()
+        val request =
+            Request.Builder().url(url).addHeader("Authorization", "Bearer $apiKey").post(body)
+                .build()
 
         client.newCall(request).enqueue(object : Callback {
+
             override fun onFailure(call: Call, e: IOException) {
                 e.printStackTrace()
-                callback("Error: ${e.message}")
+                callback("Network Error: ${e.message}")
             }
 
             override fun onResponse(call: Call, response: Response) {
                 if (!response.isSuccessful) {
-                    callback("Error: ${response.message}")
+                    callback("HTTP Error: ${response.code} - ${response.message}")
                     return
+
                 }
 
                 response.body?.let { responseBody ->
@@ -63,15 +65,20 @@ class ApiRepository {
                     try {
                         val jsonResponse = JSONObject(responseString)
                         val choices = jsonResponse.getJSONArray("choices")
+
                         if (choices.length() > 0) {
+
                             val content = choices.getJSONObject(0)
                                 .getJSONObject("message")
                                 .getString("content")
-                            sessions[sessionId]?.add("{\"role\": \"assistant\", \"content\": \"$content\"}")
+
+                            sessions[sessionId]?.add("""{"role": "assistant", "content": "$content"}""")
                             callback(content.trim())
+
                         } else {
                             callback("Error: No choices found in response")
                         }
+
                     } catch (e: Exception) {
                         e.printStackTrace()
                         callback("Error parsing response: ${e.message}")
@@ -80,6 +87,9 @@ class ApiRepository {
                     callback("Error: Empty response body")
                 }
             }
+
         })
+
     }
+
 }
