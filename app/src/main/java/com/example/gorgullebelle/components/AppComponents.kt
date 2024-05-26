@@ -54,7 +54,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.gorgullebelle.R
-import com.example.gorgullebelle.app.navigation.Route
+import com.example.gorgullebelle.navigation.Route
 
 
 @Composable
