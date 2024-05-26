@@ -18,23 +18,28 @@ import com.example.gorgullebelle.app.System
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ExperienceScreen(messageViewModel: MessageViewModel, navigate: (String) -> Unit = {}) {
-
+fun ExperienceScreen(
+    messageViewModel: MessageViewModel,
+    navigate: (String) -> Unit = {}) {
 
     val selectedPackageIndex by System.selectedPackageIndex.collectAsState()
     val messagesState = messageViewModel.getMessages(selectedPackageIndex)
     val messages by messagesState
+    val canSendMessages by System.getCanSendMessages(selectedPackageIndex).collectAsState()
+
+    var shouldRecompose by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
-
         Button(onClick = { navigate(Route.DashboardScreen.route) }) {
             Text(text = "Menü")
         }
 
         LazyColumn(
-            modifier = Modifier.weight(1f).padding(8.dp)
+            modifier = Modifier
+                .weight(1f)
+                .padding(8.dp)
         ) {
             items(messages) { message ->
                 if (message.startsWith("Bot:")) {
@@ -45,18 +50,39 @@ fun ExperienceScreen(messageViewModel: MessageViewModel, navigate: (String) -> U
             }
         }
 
-        MessageInput(
-            onSend = { messageText ->
-                messageViewModel.sendMessage(selectedPackageIndex, messageText)
+        if (canSendMessages) {
+            MessageInput(
+                onSend = { messageText ->
+                    messageViewModel.sendMessage(selectedPackageIndex, messageText)
+                }
+            )
+        } else {
+            Button(
+                onClick = {
+                    System.resetMessages(selectedPackageIndex, messageViewModel)
+                    shouldRecompose = true // Ekranın yeniden yüklenmesini tetikle
+                },
+                modifier = Modifier.align(Alignment.End).padding(8.dp)
+            ) {
+                Text(text = "Reset")
             }
-        )
+        }
+    }
+
+    // Ekranın yeniden yüklenmesini tetiklemek için
+    if (shouldRecompose) {
+        LaunchedEffect(Unit) {
+            shouldRecompose = false
+        }
     }
 }
 
 @Composable
 fun BotMessageBubble(message: String) {
     Box(
-        modifier = Modifier.fillMaxWidth().padding(4.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(4.dp),
         contentAlignment = Alignment.CenterStart
     ) {
         Card(
@@ -74,7 +100,9 @@ fun BotMessageBubble(message: String) {
 @Composable
 fun UserMessageBubble(message: String) {
     Box(
-        modifier = Modifier.fillMaxWidth().padding(4.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(4.dp),
         contentAlignment = Alignment.CenterEnd
     ) {
         Card(
