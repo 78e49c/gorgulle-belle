@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Görgülle Belle</string>
-    <string name="hello">Merhaba</string>
+    <string name="hello">Hoş geldin</string>
     <string name="sign_up">Hesap oluştur</string>
     <string name="sign_in">Giriş yap</string>
     <string name="welcome">Hoş döndün</string>
@@ -11,8 +11,7 @@
     <string name="hide_password">Göster</string>
     <string name="show_password">Gizle</string>
     <string name="policy">By continuing you agree to our Terms of Service and Privacy Policy</string>
-    <string name="register">Register</string>
-    <string name="login">Giriş</string>
-
-
+    <string name="register">Kaydol</string>
+    <string name="login">Gir</string>
+    <string name="out">Çık</string>
 </resources>
