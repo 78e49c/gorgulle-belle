@@ -1,4 +1,4 @@
-package com.example.gorgullebelle.app
+package com.example.gorgullebelle.app.data
 
 import android.content.Context
 import androidx.core.content.edit

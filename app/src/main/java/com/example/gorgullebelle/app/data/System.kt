@@ -1,5 +1,6 @@
-package com.example.gorgullebelle.app
+package com.example.gorgullebelle.app.data
 
+import com.example.gorgullebelle.app.presentation.viewmodel.ChatSessionManagerViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -46,11 +47,11 @@ object System {
     }
 
     // Mesajları sıfırlar ve gönderme durumunu etkinleştirir.
-    fun resetMessages(index: Int, messageViewModel: MessageViewModel) {
+    fun resetMessages(index: Int, chatSessionManagerViewModel: ChatSessionManagerViewModel) {
         if (index in _messagePackages.indices) {
             _messagePackages[index].value = emptyList()
             setCanSendMessages(index, true)
-            messageViewModel.clearMessages(index)
+            chatSessionManagerViewModel.clearMessages(index)
         }
     }
 

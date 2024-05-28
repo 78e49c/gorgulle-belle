@@ -1,4 +1,4 @@
-package com.example.gorgullebelle.navigation
+package com.example.gorgullebelle.app.presentation.navigation
 
 sealed class Route(
     val route: String
@@ -8,4 +8,7 @@ sealed class Route(
     object SignInScreen : Route("signInScreen")
     object ExperienceScreen : Route("experienceScreen")
     object ConversationListScreen : Route("conversationListScreen")
+    object ProfileScreen : Route("profileScreen")
+    object ExerciseScreen : Route("exerciseScreen")
+    object ExerciseListScreen : Route("exerciseListScreen")
 }

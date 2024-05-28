@@ -1,4 +1,4 @@
-package com.example.gorgullebelle.screen
+package com.example.gorgullebelle.app.presentation.screen
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -15,14 +15,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.gorgullebelle.R
-import com.example.gorgullebelle.navigation.Route
-import com.example.gorgullebelle.components.ButtonComponent
-import com.example.gorgullebelle.components.ClickableLoginTextComponent
-import com.example.gorgullebelle.components.HeadingTextComponent
-import com.example.gorgullebelle.components.MyTextField
-import com.example.gorgullebelle.components.NormalTextComponent
-import com.example.gorgullebelle.components.PasswordTextField
-import com.example.gorgullebelle.components.gradientBackground
+import com.example.gorgullebelle.app.presentation.components.ButtonComponent
+import com.example.gorgullebelle.app.presentation.components.ClickableLoginTextComponent
+import com.example.gorgullebelle.app.presentation.components.HeadingTextComponent
+import com.example.gorgullebelle.app.presentation.components.MyTextField
+import com.example.gorgullebelle.app.presentation.components.NormalTextComponent
+import com.example.gorgullebelle.app.presentation.components.PasswordTextField
+import com.example.gorgullebelle.app.presentation.components.gradientBackground2
+import com.example.gorgullebelle.app.presentation.navigation.Route
 
 
 @Composable
@@ -37,7 +37,7 @@ fun SignInScreen(navigate: (String) -> Unit = {}) {
         Surface(
             modifier = Modifier
                 .fillMaxSize()
-                .gradientBackground()
+                .gradientBackground2()
                 .alpha(0.1f)
         ) {}
 
@@ -48,7 +48,7 @@ fun SignInScreen(navigate: (String) -> Unit = {}) {
 
         ) {
 
-            NormalTextComponent(value = stringResource(id = R.string.hello))
+            NormalTextComponent(value = stringResource(id = R.string.welcome))
             HeadingTextComponent(value = stringResource(id = R.string.sign_in))
 
             Spacer(modifier = Modifier
@@ -70,10 +70,14 @@ fun SignInScreen(navigate: (String) -> Unit = {}) {
                     , painterResource(id = R.drawable.baseline_key_24)
                 )
 
-                Spacer(modifier = Modifier
-                    .height(300.dp))
+                Spacer(modifier = Modifier.weight(1f))
 
-                ButtonComponent(value = stringResource(id = R.string.register))
+                ButtonComponent(
+                    value = stringResource(id = R.string.login),
+                    onClick = {
+                        navigate.invoke(Route.ProfileScreen.route)
+                    }
+                )
 
                 ClickableLoginTextComponent(navigate = navigate, route = Route.SignUpScreen.route," Hesap oluştur ","Hesabın yoksa ",)
                 ClickableLoginTextComponent(navigate = navigate, route = Route.DashboardScreen.route," Geri dön ","",)
