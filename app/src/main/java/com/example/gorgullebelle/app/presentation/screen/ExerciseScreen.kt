@@ -1,6 +1,7 @@
 package com.example.gorgullebelle.app.presentation.screen
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -34,7 +35,7 @@ fun ExerciseScreen(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             CustomTopAppBar(
-                title = "Konuşma",
+                title = "Konu tespiti",
                 onIconClick = { navigate(Route.ExerciseListScreen.route) }
             )
         }
@@ -47,6 +48,9 @@ fun ExerciseScreen(
             Column(
                 modifier = Modifier.fillMaxSize()
             ) {
+
+                Spacer(modifier = Modifier.weight(0.2f))
+
                 if (currentQuestionIndex < questions.size) {
                     val question = questions[currentQuestionIndex]
                     QuestionComponent(
@@ -63,7 +67,7 @@ fun ExerciseScreen(
                     )
                 } else {
                     Text(
-                        text = "Test completed! Your score is: $totalScore",
+                        text = "Kazandığın toplam puan: $totalScore",
                         fontSize = 20.sp,
                         modifier = Modifier.padding(16.dp)
                     )
