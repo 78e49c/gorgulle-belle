@@ -66,7 +66,7 @@ fun ProfileScreen(
                         painter = painterResource(R.drawable.sharp_person_24),
                         contentScale = ContentScale.FillBounds,
                         modifier = Modifier
-                            .padding(top = 40.dp)
+                            .padding(top = 20.dp)
                             .width(180.dp)
                             .height(180.dp)
                             .clip(RoundedCornerShape(90.dp)), contentDescription = ""
@@ -91,26 +91,31 @@ fun ProfileScreen(
                      text = "Salih Durak",
                      color = Color.Black,
                      style = MaterialTheme.typography.titleLarge.copy(
-                         fontWeight = FontWeight(700),
+                         fontWeight = FontWeight(600),
                          fontSize = 30.sp
                      )
                  )
 
                  ProfileRow(
-                     title = "Ana dil",
+                     title = "Bildiği dil",
                      value = "Türkçe"
                  )
 
                  ProfileRow(
-                     title = "Öğrenilen dil",
+                     title = "Öğrendiği dil",
                      value = "İngilizce"
                  )
+
+                    ProfileRow(
+                        title = "Puan",
+                        value = "0"
+                    )
              }
 
              Box(
                  modifier = Modifier
                      .align(Alignment.BottomCenter)
-                     .padding(bottom = 60.dp)
+                     .padding(bottom = 40.dp)
              ) {
                  ButtonComponent(
                      value = stringResource(id = R.string.out),
