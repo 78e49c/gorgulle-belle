@@ -31,14 +31,14 @@ import com.example.gorgullebelle.R
 import com.example.gorgullebelle.app.data.System
 import com.example.gorgullebelle.app.presentation.components.CustomTopAppBar
 import com.example.gorgullebelle.app.presentation.navigation.Route
-import com.example.gorgullebelle.app.presentation.viewmodel.ChatSessionManagerViewModel
+import com.example.gorgullebelle.app.presentation.viewmodel.ChatManagerViewModel
 import kotlinx.coroutines.flow.StateFlow
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ConversationListScreen(navigate: (String) -> Unit = {}) {
-    val chatSessionManagerViewModel: ChatSessionManagerViewModel = viewModel()
+    val chatSessionManagerViewModel: ChatManagerViewModel = viewModel()
     val messagePackages = System.messagePackages
 
     Scaffold(
