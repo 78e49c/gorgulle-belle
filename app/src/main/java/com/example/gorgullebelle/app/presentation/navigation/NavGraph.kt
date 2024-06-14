@@ -5,22 +5,20 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-
 import com.example.gorgullebelle.app.presentation.screen.ConversationListScreen
 import com.example.gorgullebelle.app.presentation.screen.DashboardScreen
-import com.example.gorgullebelle.app.presentation.screen.ExerciseScreen
 import com.example.gorgullebelle.app.presentation.screen.ExerciseListScreen
+import com.example.gorgullebelle.app.presentation.screen.ExerciseScreen
 import com.example.gorgullebelle.app.presentation.screen.ExperienceScreen
 import com.example.gorgullebelle.app.presentation.screen.ProfileScreen
 import com.example.gorgullebelle.app.presentation.screen.SignInScreen
 import com.example.gorgullebelle.app.presentation.screen.SignUpScreen
-
-import com.example.gorgullebelle.app.presentation.viewmodel.ChatSessionManagerViewModel
+import com.example.gorgullebelle.app.presentation.viewmodel.ChatManagerViewModel
 
 @Composable
 fun NavGraph() {
     val navController = rememberNavController()
-    val chatSessionManagerViewModel: ChatSessionManagerViewModel = viewModel()
+    val chatManagerViewModel: ChatManagerViewModel = viewModel()
 
     NavHost(
         navController = navController,
@@ -52,7 +50,7 @@ fun NavGraph() {
 
         composable(Route.ExperienceScreen.route) {
             ExperienceScreen(
-                chatSessionManagerViewModel = chatSessionManagerViewModel,
+                chatManagerViewModel = chatManagerViewModel,
                 navigate = { route ->
                     navController.navigate(route)
                 }
