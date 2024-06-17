@@ -20,26 +20,19 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.gorgullebelle.R
-import com.example.gorgullebelle.app.data.System
 import com.example.gorgullebelle.app.presentation.components.CustomTopAppBar
 import com.example.gorgullebelle.app.presentation.navigation.Route
 import com.example.gorgullebelle.app.presentation.viewmodel.ChatManagerViewModel
-import kotlinx.coroutines.flow.StateFlow
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ConversationListScreen(navigate: (String) -> Unit = {}) {
-    val chatSessionManagerViewModel: ChatManagerViewModel = viewModel()
-    val messagePackages = System.messagePackages
+    val chatManagerViewModel: ChatManagerViewModel = viewModel()
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -63,42 +56,42 @@ fun ConversationListScreen(navigate: (String) -> Unit = {}) {
                         .padding(8.dp)
                 ) {
                     item {
+                        val messagesFlow = chatManagerViewModel.getMessages(0).collectAsState()
                         ConversationListItem(
                             title = "AI Dedektifi",
                             imageResId = R.drawable.ai_dedektifi,
-                            messagesFlow = messagePackages.getOrNull(0),
+                            messagesFlow = messagesFlow.value,
                             onClick = {
-                                System.setSelectedPackageIndex(0)
-                                System.disableSending(0)
-                                chatSessionManagerViewModel.updateCurrentSessionId(0)
+                                chatManagerViewModel.setSelectedPackageIndex(0)
+                                chatManagerViewModel.updateCurrentSessionId(0)
                                 navigate(Route.ExperienceScreen.route)
                             }
                         )
                     }
 
                     item {
+                        val messagesFlow = chatManagerViewModel.getMessages(1).collectAsState()
                         ConversationListItem(
                             title = "Gönül Hasbihali",
                             imageResId = R.drawable.gonul_hasbihali,
-                            messagesFlow = messagePackages.getOrNull(1),
+                            messagesFlow = messagesFlow.value,
                             onClick = {
-                                System.setSelectedPackageIndex(1)
-                                System.disableSending(1)
-                                chatSessionManagerViewModel.updateCurrentSessionId(1)
+                                chatManagerViewModel.setSelectedPackageIndex(1)
+                                chatManagerViewModel.updateCurrentSessionId(1)
                                 navigate(Route.ExperienceScreen.route)
                             }
                         )
                     }
 
                     item {
+                        val messagesFlow = chatManagerViewModel.getMessages(2).collectAsState()
                         ConversationListItem(
                             title = "Şam Yolculuğu",
                             imageResId = R.drawable.sam_yolculugu,
-                            messagesFlow = messagePackages.getOrNull(2),
+                            messagesFlow = messagesFlow.value,
                             onClick = {
-                                System.setSelectedPackageIndex(2)
-                                System.disableSending(2)
-                                chatSessionManagerViewModel.updateCurrentSessionId(2)
+                                chatManagerViewModel.setSelectedPackageIndex(2)
+                                chatManagerViewModel.updateCurrentSessionId(2)
                                 navigate(Route.ExperienceScreen.route)
                             }
                         )
@@ -108,10 +101,10 @@ fun ConversationListScreen(navigate: (String) -> Unit = {}) {
         }
     }
 }
+
 @Composable
-fun ConversationListItem(title: String, imageResId: Int, messagesFlow: StateFlow<List<String>>?, onClick: () -> Unit) {
-    val messages by messagesFlow?.collectAsState() ?: remember { mutableStateOf(emptyList()) }
-    val lastMessage = messages.lastOrNull() ?: "No messages yet"
+fun ConversationListItem(title: String, imageResId: Int, messagesFlow: List<String>, onClick: () -> Unit) {
+    val lastMessage = messagesFlow.lastOrNull() ?: "No messages yet"
 
     Row(
         modifier = Modifier
