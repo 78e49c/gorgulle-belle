@@ -30,7 +30,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.gorgullebelle.app.data.System
 import com.example.gorgullebelle.app.presentation.components.CustomTopAppBar
 import com.example.gorgullebelle.app.presentation.navigation.Route
 import com.example.gorgullebelle.app.presentation.viewmodel.ChatManagerViewModel
@@ -41,12 +40,9 @@ fun ExperienceScreen(
     chatManagerViewModel: ChatManagerViewModel = viewModel(),
     navigate: (String) -> Unit = {}
 ) {
-    val selectedPackageIndex by System.selectedPackageIndex.collectAsState()
-    val messagesState = chatManagerViewModel.getMessages(selectedPackageIndex)
-    val messages by messagesState
-    val canSendMessages by System.getCanSendMessages(selectedPackageIndex).collectAsState()
-
-    var shouldRecompose by remember { mutableStateOf(false) }
+    val selectedPackageIndex by chatManagerViewModel.selectedPackageIndex.collectAsState()
+    val messagesState by chatManagerViewModel.getMessages(selectedPackageIndex).collectAsState()
+    val canSendMessages by chatManagerViewModel.canSendMessages.collectAsState()
 
     Surface(modifier = Modifier.fillMaxSize()) {
         Scaffold(
@@ -68,7 +64,7 @@ fun ExperienceScreen(
                             .weight(1f)
                             .padding(8.dp)
                     ) {
-                        items(messages) { message ->
+                        items(messagesState) { message ->
                             if (message.startsWith("Bot:")) {
                                 BotMessageBubble(message = message)
                             } else {
@@ -94,16 +90,6 @@ fun ExperienceScreen(
     }
 }
 
-
-/*
-    // Ekranın yeniden yüklenmesini tetiklemek için
-    if (shouldRecompose) {
-        LaunchedEffect(Unit) {
-            shouldRecompose = false
-        }
-    }
-}
-*/
 @Composable
 fun BotMessageBubble(message: String) {
     Box(
@@ -177,19 +163,5 @@ fun MessageInput(onSend: (String) -> Unit) {
         ) {
             Text("Gönder")
         }
-
-        Column {
-
-
-
-
-
-
-
-
-
     }
-}}
-
-
-
+}
