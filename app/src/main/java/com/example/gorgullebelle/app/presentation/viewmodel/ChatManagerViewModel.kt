@@ -2,8 +2,6 @@ package com.example.gorgullebelle.app.presentation.viewmodel
 
 import android.app.Application
 import android.content.Context
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gorgullebelle.app.data.ChatRequest
@@ -15,26 +13,36 @@ import com.example.gorgullebelle.app.data.conversationAlwaysPrompts
 import com.example.gorgullebelle.app.data.conversationPrompts
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ChatManagerViewModel(application: Application) : AndroidViewModel(application) {
 
     private val context: Context = application.applicationContext
-    private val sessionMessages = mutableMapOf<Int, MutableState<List<String>>>()
+    private val sessionMessages = mutableMapOf<Int, MutableStateFlow<List<String>>>()
     private val repository = ApiRepository()
 
-    val currentSessionId = mutableStateOf(0)
+    private val _currentSessionId = MutableStateFlow(0)
+    val currentSessionId: StateFlow<Int> = _currentSessionId
+
+    private val _selectedPackageIndex = MutableStateFlow(0)
+    val selectedPackageIndex: StateFlow<Int> = _selectedPackageIndex
+
+    private val _canSendMessages = mutableMapOf<Int, MutableStateFlow<Boolean>>()
+    val canSendMessages: StateFlow<Boolean>
+        get() = _canSendMessages[_selectedPackageIndex.value] ?: MutableStateFlow(true)
 
     init {
         loadSessions()
     }
 
     private fun loadSessions() {
-        viewModelScope.launch(Dispatchers.IO) {
-            val savedSessions = LocalStorageHelper.loadSessions(context)
-            savedSessions.forEach { (id, messages) ->
-                sessionMessages[id] = mutableStateOf(messages)
-            }
+        val savedSessions = LocalStorageHelper.loadSessions(context)
+        savedSessions.forEach { (id, messages) ->
+            sessionMessages[id] = MutableStateFlow(messages)
+            _canSendMessages[id] = MutableStateFlow(true)
         }
     }
 
@@ -48,19 +56,14 @@ class ChatManagerViewModel(application: Application) : AndroidViewModel(applicat
         saveSessions()
     }
 
-    fun getMessages(sessionId: Int): MutableState<List<String>> {
-        return sessionMessages.getOrPut(sessionId) { mutableStateOf(emptyList()) }
-    }
-
-    fun addMessage(sessionId: Int, message: String) {
-        val messages = sessionMessages.getOrPut(sessionId) { mutableStateOf(emptyList()) }
-        messages.value = messages.value + message
+    fun getMessages(sessionId: Int): StateFlow<List<String>> {
+        return sessionMessages.getOrPut(sessionId) { MutableStateFlow(emptyList()) }
     }
 
     fun sendMessage(sessionId: Int, userMessage: String, conversationType: Int) {
         addMessage(sessionId, "You: $userMessage")
 
-        val messageHistory = getMessages(sessionId).value ?: emptyList()
+        val messageHistory = getMessages(sessionId).value
 
         val systemMessage = ""
         val assistantMessage = ""
@@ -85,12 +88,13 @@ class ChatManagerViewModel(application: Application) : AndroidViewModel(applicat
         }
     }
 
-    fun sendPrompt(sessionId: Int, conversationType: Int, promptUsageType: PromptUsageType, onResponse: ((String) -> Unit)? = null) {
+    fun sendPrompt(sessionId: Int, conversationType: Int, promptUsageType: PromptUsageType) {
         val prompt = when (promptUsageType) {
             PromptUsageType.SYSTEM -> conversationPrompts[conversationType]
             PromptUsageType.ALWAYS -> conversationAlwaysPrompts[conversationType]
         }
-        val messageHistory = getMessages(sessionId).value ?: emptyList()
+        val messageHistory = getMessages(sessionId).value
+
         val messages = MessageBuilder.buildMessageHistory(
             messageHistory.map { Message(it.split(": ")[0], it.split(": ")[1]) },
             "",
@@ -113,16 +117,43 @@ class ChatManagerViewModel(application: Application) : AndroidViewModel(applicat
             )
             addMessage(sessionId, "Bot: $response")
             saveSessions()
-            onResponse?.invoke(response)
         }
     }
 
     fun updateCurrentSessionId(newSessionId: Int) {
-        currentSessionId.value = newSessionId
+        _currentSessionId.value = newSessionId
     }
 
     fun clearMessages(packageIndex: Int) {
         sessionMessages[packageIndex]?.value = emptyList()
+    }
+
+    fun setSelectedPackageIndex(index: Int) {
+        if (index in sessionMessages.keys) {
+            _selectedPackageIndex.value = index
+        }
+    }
+
+    fun getSelectedMessages(): List<String> {
+        return sessionMessages[_selectedPackageIndex.value]?.value ?: emptyList()
+    }
+
+    fun resetMessages(index: Int) {
+        if (index in sessionMessages.keys) {
+            sessionMessages[index]?.value = emptyList()
+            _canSendMessages[index]?.value = true
+            clearMessages(index)
+        }
+    }
+
+    fun disableSending(index: Int) {
+        if (index in _canSendMessages.keys) {
+            _canSendMessages[index]?.value = false
+        }
+    }
+
+    fun addMessage(sessionId: Int, message: String) {
+        sessionMessages[sessionId]?.update { it + message }
     }
 
     enum class PromptUsageType {
