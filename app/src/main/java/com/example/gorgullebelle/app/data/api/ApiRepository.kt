@@ -3,13 +3,17 @@ package com.example.gorgullebelle.app.data.api
 import android.content.Context
 import com.example.gorgullebelle.R
 import com.example.gorgullebelle.app.data.Message
-import okhttp3.*
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.RequestBody.Companion.toRequestBody
-import org.json.JSONObject
-import java.io.IOException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.Response
+import org.json.JSONObject
+import java.io.IOException
 
 class ApiRepository {
 
@@ -71,7 +75,6 @@ class ApiRepository {
         })
     }
 
-
     // API'ye senkron mesaj gönderir
     suspend fun sendChatRequest(json: String): String {
         return withContext(Dispatchers.IO) {
@@ -94,8 +97,6 @@ class ApiRepository {
         }
     }
 
-
-
     fun parseJsonResponse(responseString: String): String {
         return try {
             val jsonResponse = JSONObject(responseString)
@@ -117,6 +118,4 @@ class ApiRepository {
     fun handleError(response: Response): String {
         return "HTTP Error: ${response.code} - ${response.message}"
     }
-
-
 }
