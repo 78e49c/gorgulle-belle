@@ -41,8 +41,7 @@ fun ExperienceScreen(
     navigate: (String) -> Unit = {}
 ) {
     val selectedPackageIndex by chatManagerViewModel.selectedPackageIndex.collectAsState()
-    val messagesState by chatManagerViewModel.getMessages(selectedPackageIndex).collectAsState()
-    val canSendMessages by chatManagerViewModel.canSendMessages.collectAsState()
+    val messagesState by chatManagerViewModel.getSessionMessages(selectedPackageIndex).collectAsState()
 
     Surface(modifier = Modifier.fillMaxSize()) {
         Scaffold(
@@ -75,15 +74,9 @@ fun ExperienceScreen(
 
                     MessageInput(
                         onSend = { messageText ->
-                            chatManagerViewModel.sendMessage(selectedPackageIndex, messageText, 2)
+                            chatManagerViewModel.handleMessageSend(selectedPackageIndex, messageText, 2)
                         }
                     )
-
-                    if (canSendMessages) {
-                        // Mesaj gönderilebilir durum
-                    } else {
-                        // Mesaj gönderilemez durum
-                    }
                 }
             }
         }
