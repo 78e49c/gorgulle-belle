@@ -24,7 +24,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.gorgullebelle.R
 import com.example.gorgullebelle.app.presentation.components.CustomTopAppBar
 import com.example.gorgullebelle.app.presentation.navigation.Route
@@ -32,9 +31,7 @@ import com.example.gorgullebelle.app.presentation.viewmodel.ChatManagerViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ConversationListScreen(navigate: (String) -> Unit = {}) {
-    val chatManagerViewModel: ChatManagerViewModel = viewModel()
-
+fun ConversationListScreen(navigate: (String) -> Unit = {}, chatManagerViewModel: ChatManagerViewModel) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -87,6 +84,7 @@ fun ConversationListScreen(navigate: (String) -> Unit = {}) {
         }
     }
 }
+
 
 @Composable
 fun ConversationListItem(
