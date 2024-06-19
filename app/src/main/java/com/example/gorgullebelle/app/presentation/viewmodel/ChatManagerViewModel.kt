@@ -2,6 +2,7 @@ package com.example.gorgullebelle.app.presentation.viewmodel
 
 import android.app.Application
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gorgullebelle.app.data.ChatRequest
@@ -19,20 +20,13 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ChatManagerViewModel(application: Application) : AndroidViewModel(application) {
-
     private val context: Context = application.applicationContext
     private val sessionMessages = mutableMapOf<Int, MutableStateFlow<List<String>>>()
     private val repository = ApiRepository()
 
-    private val _currentSessionId = MutableStateFlow(0)
-    val currentSessionId: StateFlow<Int> = _currentSessionId
-
-    private val _selectedPackageIndex = MutableStateFlow(0)
+    private val _selectedPackageIndex = MutableStateFlow(-1)
     val selectedPackageIndex: StateFlow<Int> = _selectedPackageIndex
 
-    private val _canSendMessages = mutableMapOf<Int, MutableStateFlow<Boolean>>()
-    val canSendMessages: StateFlow<Boolean>
-        get() = _canSendMessages[_selectedPackageIndex.value] ?: MutableStateFlow(true)
 
     init {
         loadSessions()
@@ -42,28 +36,26 @@ class ChatManagerViewModel(application: Application) : AndroidViewModel(applicat
         val savedSessions = LocalStorageHelper.loadSessions(context)
         savedSessions.forEach { (id, messages) ->
             sessionMessages[id] = MutableStateFlow(messages)
-            _canSendMessages[id] = MutableStateFlow(true)
+            Log.d("ChatManagerViewModel", "Session loaded: $id, Messages: $messages")
         }
     }
 
     fun saveSessions() {
         val sessions = sessionMessages.mapValues { it.value.value }
         LocalStorageHelper.saveSessions(context, sessions)
+        Log.d("ChatManagerViewModel", "Sessions saved: $sessions")
     }
 
     override fun onCleared() {
         super.onCleared()
         saveSessions()
+        Log.d("ChatManagerViewModel", "ViewModel cleared and sessions saved.")
     }
 
-    fun getMessages(sessionId: Int): StateFlow<List<String>> {
-        return sessionMessages.getOrPut(sessionId) { MutableStateFlow(emptyList()) }
-    }
+    fun handleMessageSend(sessionId: Int, userMessage: String, conversationType: Int) {
+        addMessageToSession(sessionId, "You: $userMessage")
 
-    fun sendMessage(sessionId: Int, userMessage: String, conversationType: Int) {
-        addMessage(sessionId, "You: $userMessage")
-
-        val messageHistory = getMessages(sessionId).value
+        val messageHistory = getSessionMessages(sessionId).value
 
         val systemMessage = ""
         val assistantMessage = ""
@@ -75,25 +67,24 @@ class ChatManagerViewModel(application: Application) : AndroidViewModel(applicat
             assistantMessage
         )
 
+        sendToApi(sessionId, messages, conversationType)
+    }
+
+    private fun sendToApi(sessionId: Int, messages: List<Message>, conversationType: Int) {
         repository.sendMessage(context, sessionId, messages, conversationType) { response ->
-            val updatedMessages = MessageBuilder.buildMessageHistory(
-                messages,
-                "",
-                "",
-                response
-            )
-            addMessage(sessionId, "Bot: $response")
-            sendPrompt(sessionId, conversationType, PromptUsageType.ALWAYS)
+            addMessageToSession(sessionId, "Bot: $response")
+            triggerBotPrompt(sessionId, conversationType, PromptUsageType.ALWAYS)
             saveSessions()
+            Log.d("ChatManagerViewModel", "API response received and session saved: $response")
         }
     }
 
-    fun sendPrompt(sessionId: Int, conversationType: Int, promptUsageType: PromptUsageType) {
+    private fun triggerBotPrompt(sessionId: Int, conversationType: Int, promptUsageType: PromptUsageType) {
         val prompt = when (promptUsageType) {
             PromptUsageType.SYSTEM -> conversationPrompts[conversationType]
             PromptUsageType.ALWAYS -> conversationAlwaysPrompts[conversationType]
         }
-        val messageHistory = getMessages(sessionId).value
+        val messageHistory = getSessionMessages(sessionId).value
 
         val messages = MessageBuilder.buildMessageHistory(
             messageHistory.map { Message(it.split(": ")[0], it.split(": ")[1]) },
@@ -109,51 +100,41 @@ class ChatManagerViewModel(application: Application) : AndroidViewModel(applicat
         val json = Gson().toJson(chatRequest)
         viewModelScope.launch(Dispatchers.IO) {
             val response = repository.sendChatRequest(json)
-            val updatedMessages = MessageBuilder.buildMessageHistory(
-                messages,
-                "",
-                "",
-                response
-            )
-            addMessage(sessionId, "Bot: $response")
+            addMessageToSession(sessionId, "Bot: $response")
             saveSessions()
+            Log.d("ChatManagerViewModel", "Bot prompt response received and session saved: $response")
         }
     }
 
-    fun updateCurrentSessionId(newSessionId: Int) {
-        _currentSessionId.value = newSessionId
-    }
-
-    fun clearMessages(packageIndex: Int) {
+    fun clearSessionMessages(packageIndex: Int) {
         sessionMessages[packageIndex]?.value = emptyList()
+        Log.d("ChatManagerViewModel", "Session messages cleared: $packageIndex")
     }
 
     fun setSelectedPackageIndex(index: Int) {
-        if (index in sessionMessages.keys) {
-            _selectedPackageIndex.value = index
-        }
+        _selectedPackageIndex.value = index
+        Log.d("ChatManagerViewModel", "Selected package index set: $index")
     }
 
-    fun getSelectedMessages(): List<String> {
+    fun getSessionMessages(sessionId: Int): StateFlow<List<String>> {
+        return sessionMessages.getOrPut(sessionId) { MutableStateFlow(emptyList()) }
+    }
+
+    fun getSelectedSessionMessages(): List<String> {
         return sessionMessages[_selectedPackageIndex.value]?.value ?: emptyList()
     }
 
-    fun resetMessages(index: Int) {
+    fun resetSessionMessages(index: Int) {
         if (index in sessionMessages.keys) {
             sessionMessages[index]?.value = emptyList()
-            _canSendMessages[index]?.value = true
-            clearMessages(index)
+            clearSessionMessages(index)
+            Log.d("ChatManagerViewModel", "Session messages reset: $index")
         }
     }
 
-    fun disableSending(index: Int) {
-        if (index in _canSendMessages.keys) {
-            _canSendMessages[index]?.value = false
-        }
-    }
-
-    fun addMessage(sessionId: Int, message: String) {
+    private fun addMessageToSession(sessionId: Int, message: String) {
         sessionMessages[sessionId]?.update { it + message }
+        Log.d("ChatManagerViewModel", "Message added: $message, Session: $sessionId")
     }
 
     enum class PromptUsageType {
