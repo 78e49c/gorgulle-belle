@@ -1,5 +1,6 @@
 package com.example.gorgullebelle.app.presentation.screen
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -49,51 +50,36 @@ fun ConversationListScreen(navigate: (String) -> Unit = {}) {
                 .padding(innerPadding)
         ) {
             Column {
-
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(8.dp)
                 ) {
                     item {
-                        val messagesFlow = chatManagerViewModel.getMessages(0).collectAsState()
                         ConversationListItem(
                             title = "AI Dedektifi",
                             imageResId = R.drawable.ai_dedektifi,
-                            messagesFlow = messagesFlow.value,
-                            onClick = {
-                                chatManagerViewModel.setSelectedPackageIndex(0)
-                                chatManagerViewModel.updateCurrentSessionId(0)
-                                navigate(Route.ExperienceScreen.route)
-                            }
+                            sessionId = 0,
+                            chatManagerViewModel = chatManagerViewModel,
+                            navigate = navigate
                         )
                     }
-
                     item {
-                        val messagesFlow = chatManagerViewModel.getMessages(1).collectAsState()
                         ConversationListItem(
                             title = "Gönül Hasbihali",
                             imageResId = R.drawable.gonul_hasbihali,
-                            messagesFlow = messagesFlow.value,
-                            onClick = {
-                                chatManagerViewModel.setSelectedPackageIndex(1)
-                                chatManagerViewModel.updateCurrentSessionId(1)
-                                navigate(Route.ExperienceScreen.route)
-                            }
+                            sessionId = 1,
+                            chatManagerViewModel = chatManagerViewModel,
+                            navigate = navigate
                         )
                     }
-
                     item {
-                        val messagesFlow = chatManagerViewModel.getMessages(2).collectAsState()
                         ConversationListItem(
                             title = "Şam Yolculuğu",
                             imageResId = R.drawable.sam_yolculugu,
-                            messagesFlow = messagesFlow.value,
-                            onClick = {
-                                chatManagerViewModel.setSelectedPackageIndex(2)
-                                chatManagerViewModel.updateCurrentSessionId(2)
-                                navigate(Route.ExperienceScreen.route)
-                            }
+                            sessionId = 2,
+                            chatManagerViewModel = chatManagerViewModel,
+                            navigate = navigate
                         )
                     }
                 }
@@ -103,13 +89,23 @@ fun ConversationListScreen(navigate: (String) -> Unit = {}) {
 }
 
 @Composable
-fun ConversationListItem(title: String, imageResId: Int, messagesFlow: List<String>, onClick: () -> Unit) {
-    val lastMessage = messagesFlow.lastOrNull() ?: "No messages yet"
+fun ConversationListItem(
+    title: String,
+    imageResId: Int,
+    sessionId: Int,
+    chatManagerViewModel: ChatManagerViewModel,
+    navigate: (String) -> Unit
+) {
+    val messagesFlow = chatManagerViewModel.getSessionMessages(sessionId).collectAsState()
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onClick() }
+            .clickable {
+                Log.d("ConversationListItem", "Clicked: $sessionId")
+                chatManagerViewModel.setSelectedPackageIndex(sessionId)
+                navigate(Route.ExperienceScreen.route)
+            }
             .padding(8.dp),
         horizontalArrangement = Arrangement.Start
     ) {
@@ -122,7 +118,7 @@ fun ConversationListItem(title: String, imageResId: Int, messagesFlow: List<Stri
         Column {
             Text(text = title, style = MaterialTheme.typography.titleMedium)
             Spacer(modifier = Modifier.height(4.dp))
-            Text(text = lastMessage, style = MaterialTheme.typography.bodyMedium)
+            Text(text = messagesFlow.value.lastOrNull() ?: "No messages yet", style = MaterialTheme.typography.bodyMedium)
         }
     }
 }
