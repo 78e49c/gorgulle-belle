@@ -16,9 +16,8 @@ import com.example.gorgullebelle.app.presentation.screen.SignUpScreen
 import com.example.gorgullebelle.app.presentation.viewmodel.ChatManagerViewModel
 
 @Composable
-fun NavGraph() {
+fun NavGraph(chatManagerViewModel: ChatManagerViewModel) {
     val navController = rememberNavController()
-    val chatManagerViewModel: ChatManagerViewModel = viewModel()
 
     NavHost(
         navController = navController,
@@ -61,7 +60,8 @@ fun NavGraph() {
             ConversationListScreen(
                 navigate = { route ->
                     navController.navigate(route)
-                }
+                },
+                chatManagerViewModel = chatManagerViewModel
             )
         }
 
