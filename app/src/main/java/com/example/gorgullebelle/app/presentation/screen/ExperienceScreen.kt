@@ -30,7 +30,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.gorgullebelle.app.presentation.components.CustomTopAppBar
 import com.example.gorgullebelle.app.presentation.navigation.Route
 import com.example.gorgullebelle.app.presentation.viewmodel.ChatManagerViewModel
@@ -38,7 +37,7 @@ import com.example.gorgullebelle.app.presentation.viewmodel.ChatManagerViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExperienceScreen(
-    chatManagerViewModel: ChatManagerViewModel = viewModel(),
+    chatManagerViewModel: ChatManagerViewModel,
     navigate: (String) -> Unit = {}
 ) {
     val selectedPackageIndex by chatManagerViewModel.selectedPackageIndex.collectAsState()
@@ -83,7 +82,6 @@ fun ExperienceScreen(
         }
     }
 }
-
 @Composable
 fun BotMessageBubble(message: String) {
     Box(
