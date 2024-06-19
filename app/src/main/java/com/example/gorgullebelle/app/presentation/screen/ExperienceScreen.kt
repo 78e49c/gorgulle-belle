@@ -1,5 +1,6 @@
 package com.example.gorgullebelle.app.presentation.screen
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -41,7 +42,9 @@ fun ExperienceScreen(
     navigate: (String) -> Unit = {}
 ) {
     val selectedPackageIndex by chatManagerViewModel.selectedPackageIndex.collectAsState()
+    Log.d("ExperienceScreen", "Seçili Paket Indexi: $selectedPackageIndex")
     val messagesState by chatManagerViewModel.getSessionMessages(selectedPackageIndex).collectAsState()
+    Log.d("ExperienceScreen", "Mesajlar: ${messagesState.joinToString(", ")}")
 
     Surface(modifier = Modifier.fillMaxSize()) {
         Scaffold(
@@ -57,7 +60,6 @@ fun ExperienceScreen(
                 Column(
                     modifier = Modifier.fillMaxSize()
                 ) {
-
                     LazyColumn(
                         modifier = Modifier
                             .weight(1f)
@@ -71,7 +73,6 @@ fun ExperienceScreen(
                             }
                         }
                     }
-
                     MessageInput(
                         onSend = { messageText ->
                             chatManagerViewModel.handleMessageSend(selectedPackageIndex, messageText, 2)
@@ -148,6 +149,7 @@ fun MessageInput(onSend: (String) -> Unit) {
         Button(
             onClick = {
                 if (messageText.isNotBlank()) {
+                    Log.d("MessageInput", "Mesaj Gönderiliyor: $messageText")
                     onSend(messageText)
                     messageText = ""
                 }
