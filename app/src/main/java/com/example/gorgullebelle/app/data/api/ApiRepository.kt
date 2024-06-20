@@ -25,7 +25,7 @@ class ApiRepository {
     }
 
     // API'ye mesaj gönderir
-    fun sendMessage(context: Context, sessionId: Int, messages: List<Message>, conversationType: Int, callback: (String) -> Unit) {
+    fun sendMessage(context: Context, sessionId: Int, messages: List<Message>, callback: (String) -> Unit) {
         val apiKey = getApiKey(context)
         val url = "https://api.openai.com/v1/chat/completions"
 
