@@ -104,7 +104,7 @@ fun ExperienceScreen(
                     }
                     MessageInput(
                         onSend = { messageText ->
-                            chatManagerViewModel.handleMessageSend(selectedPackageIndex, messageText, 2)
+                            chatManagerViewModel.handleMessageSend(selectedPackageIndex, messageText)
                         }
                     )
                 }
@@ -112,6 +112,7 @@ fun ExperienceScreen(
         }
     }
 }
+
 @Composable
 fun BotMessageBubble(message: String) {
     Box(
