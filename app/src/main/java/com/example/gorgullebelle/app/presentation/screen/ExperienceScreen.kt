@@ -16,12 +16,12 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -35,9 +35,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.example.gorgullebelle.R
 import com.example.gorgullebelle.app.presentation.navigation.Route
 import com.example.gorgullebelle.app.presentation.viewmodel.ChatManagerViewModel
 
@@ -95,10 +98,10 @@ fun ExperienceScreen(
                             .padding(8.dp)
                     ) {
                         items(messagesState) { message ->
-                            if (message.startsWith("Bot:")) {
-                                BotMessageBubble(message = message)
-                            } else {
-                                UserMessageBubble(message = message)
+                            when {
+                                message.startsWith("user:") -> UserMessageBubble(message.removePrefix("user: "))
+                                message.startsWith("assistant:") -> AssistantMessageBubble(message.removePrefix("assistant: "))
+                                message.startsWith("system:") -> SystemMessageBubble(message.removePrefix("system: "))
                             }
                         }
                     }
@@ -114,26 +117,6 @@ fun ExperienceScreen(
 }
 
 @Composable
-fun BotMessageBubble(message: String) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(4.dp),
-        contentAlignment = Alignment.CenterStart
-    ) {
-        Card(
-            modifier = Modifier.widthIn(max = 250.dp),
-        ) {
-            Text(
-                text = message,
-                modifier = Modifier.padding(8.dp),
-                color = LocalContentColor.current
-            )
-        }
-    }
-}
-
-@Composable
 fun UserMessageBubble(message: String) {
     Box(
         modifier = Modifier
@@ -142,12 +125,55 @@ fun UserMessageBubble(message: String) {
         contentAlignment = Alignment.CenterEnd
     ) {
         Card(
-            modifier = Modifier.widthIn(max = 250.dp)
+            modifier = Modifier.widthIn(max = 250.dp),
+            colors = CardDefaults.cardColors(colorResource(id = R.color.user_color))
         ) {
             Text(
                 text = message,
                 modifier = Modifier.padding(8.dp),
-                color = LocalContentColor.current
+                color = Color.White
+            )
+        }
+    }
+}
+
+@Composable
+fun AssistantMessageBubble(message: String) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(4.dp),
+        contentAlignment = Alignment.CenterStart
+    ) {
+        Card(
+            modifier = Modifier.widthIn(max = 250.dp),
+            colors = CardDefaults.cardColors(colorResource(id = R.color.assistant_color))
+        ) {
+            Text(
+                text = message,
+                modifier = Modifier.padding(8.dp),
+                color = Color.White
+            )
+        }
+    }
+}
+
+@Composable
+fun SystemMessageBubble(message: String) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(4.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Card(
+            modifier = Modifier.widthIn(max = 250.dp),
+            colors = CardDefaults.cardColors(colorResource(id = R.color.system_color))
+        ) {
+            Text(
+                text = message,
+                modifier = Modifier.padding(8.dp),
+                color = Color.White
             )
         }
     }
