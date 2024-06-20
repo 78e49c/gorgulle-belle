@@ -52,7 +52,7 @@ class ChatManagerViewModel(application: Application) : AndroidViewModel(applicat
         Log.d("ChatManagerViewModel", "ViewModel cleared and sessions saved.")
     }
 
-    fun handleMessageSend(sessionId: Int, userMessage: String, conversationType: Int) {
+    fun handleMessageSend(sessionId: Int, userMessage: String) {
         addMessageToSession(sessionId, "You: $userMessage")
 
         val messageHistory = getSessionMessages(sessionId).value
@@ -67,22 +67,22 @@ class ChatManagerViewModel(application: Application) : AndroidViewModel(applicat
             assistantMessage
         )
 
-        sendToApi(sessionId, messages, conversationType)
+        sendToApi(sessionId, messages)
     }
 
-    private fun sendToApi(sessionId: Int, messages: List<Message>, conversationType: Int) {
-        repository.sendMessage(context, sessionId, messages, conversationType) { response ->
+    private fun sendToApi(sessionId: Int, messages: List<Message>) {
+        repository.sendMessage(context, sessionId, messages) { response ->
             addMessageToSession(sessionId, "Bot: $response")
-            triggerBotPrompt(sessionId, conversationType, PromptUsageType.ALWAYS)
+            triggerBotPrompt(sessionId, PromptUsageType.ALWAYS)
             saveSessions()
             Log.d("ChatManagerViewModel", "API response received and session saved: $response")
         }
     }
 
-    private fun triggerBotPrompt(sessionId: Int, conversationType: Int, promptUsageType: PromptUsageType) {
+    private fun triggerBotPrompt(sessionId: Int, promptUsageType: PromptUsageType) {
         val prompt = when (promptUsageType) {
-            PromptUsageType.SYSTEM -> conversationPrompts[conversationType]
-            PromptUsageType.ALWAYS -> conversationAlwaysPrompts[conversationType]
+            PromptUsageType.SYSTEM -> conversationPrompts[sessionId]
+            PromptUsageType.ALWAYS -> conversationAlwaysPrompts[sessionId]
         }
         val messageHistory = getSessionMessages(sessionId).value
 
@@ -107,8 +107,9 @@ class ChatManagerViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     fun clearSessionMessages(packageIndex: Int) {
-        sessionMessages[packageIndex]?.value = emptyList()
-        Log.d("ChatManagerViewModel", "Session messages cleared: $packageIndex")
+        val prompts = conversationPrompts[packageIndex] ?: listOf()
+        sessionMessages[packageIndex]?.value = prompts.map { "Bot: ${it.content}" }
+        Log.d("ChatManagerViewModel", "Session messages cleared and prompts added: $packageIndex")
     }
 
     fun setSelectedPackageIndex(index: Int) {
