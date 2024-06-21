@@ -1,7 +1,6 @@
 package com.example.gorgullebelle.app.presentation.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -9,7 +8,7 @@ import com.example.gorgullebelle.app.presentation.screen.ConversationListScreen
 import com.example.gorgullebelle.app.presentation.screen.DashboardScreen
 import com.example.gorgullebelle.app.presentation.screen.ExerciseListScreen
 import com.example.gorgullebelle.app.presentation.screen.ExerciseScreen
-import com.example.gorgullebelle.app.presentation.screen.ExperienceScreen
+import com.example.gorgullebelle.app.presentation.screen.ConversationScreen
 import com.example.gorgullebelle.app.presentation.screen.ProfileScreen
 import com.example.gorgullebelle.app.presentation.screen.SignInScreen
 import com.example.gorgullebelle.app.presentation.screen.SignUpScreen
@@ -48,7 +47,7 @@ fun NavGraph(chatManagerViewModel: ChatManagerViewModel) {
         }
 
         composable(Route.ExperienceScreen.route) {
-            ExperienceScreen(
+            ConversationScreen(
                 chatManagerViewModel = chatManagerViewModel,
                 navigate = { route ->
                     navController.navigate(route)
