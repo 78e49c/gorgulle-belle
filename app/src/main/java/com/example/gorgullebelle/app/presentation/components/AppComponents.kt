@@ -475,13 +475,13 @@ fun CardItem(
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = title,
-                fontSize = 20.sp,
+                fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(vertical = 4.dp)
             )
             Text(
                 text = body,
-                fontSize = 16.sp,
+                fontSize = 14.sp,
                 modifier = Modifier.padding(vertical = 4.dp)
             )
             Spacer(modifier = Modifier.weight(1f))
@@ -491,7 +491,10 @@ fun CardItem(
                     .fillMaxWidth()
                     .padding(vertical = 8.dp)
             ) {
-                Text(text = buttonText)
+                Text(
+                    text = buttonText,
+                    fontSize = 14.sp,
+                    color = Color.Black)
             }
         }
     }
@@ -509,7 +512,7 @@ fun Carousel(
     Column(modifier = modifier) {
         Text(
             text = title,
-            fontSize = 24.sp,
+            fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier
                 .padding(horizontal = 16.dp)
