@@ -75,7 +75,6 @@ class ApiRepository {
         })
     }
 
-
     suspend fun sendChatRequest(context: Context, json: String): String {
         return withContext(Dispatchers.IO) {
             val url = "https://api.openai.com/v1/chat/completions"
