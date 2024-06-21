@@ -59,8 +59,8 @@ class ChatManagerViewModel(application: Application) : AndroidViewModel(applicat
         val messages = MessageBuilder.buildMessageHistory(
             messageHistory.map { Message(it.split(": ")[0], it.split(": ")[1]) },
             userMessage,
-            "",
-            ""
+            null,
+            null
         )
 
         sendToApi(sessionId, messages)
@@ -84,9 +84,9 @@ class ChatManagerViewModel(application: Application) : AndroidViewModel(applicat
 
         val messages = MessageBuilder.buildMessageHistory(
             messageHistory.map { Message(it.split(": ")[0], it.split(": ")[1]) },
-            "",
+            null,
             prompt.joinToString(" ") { it.content },
-            ""
+            null
         )
 
         val chatRequest = ChatRequest(
@@ -95,7 +95,7 @@ class ChatManagerViewModel(application: Application) : AndroidViewModel(applicat
         )
         val json = Gson().toJson(chatRequest)
         viewModelScope.launch(Dispatchers.IO) {
-            val response = repository.sendChatRequest(json)
+            val response = repository.sendChatRequest(context, json)
             addMessageToSession(sessionId, "assistant: $response")
             saveSessions()
             Log.d("ChatManagerViewModel", "Bot prompt response received and session saved: $response")
