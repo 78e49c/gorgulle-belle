@@ -3,8 +3,6 @@ package com.example.gorgullebelle.app.data.api
 import android.content.Context
 import com.example.gorgullebelle.R
 import com.example.gorgullebelle.app.data.Message
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -73,27 +71,6 @@ class ApiRepository {
                 }
             }
         })
-    }
-
-    suspend fun sendChatRequest(context: Context, json: String): String {
-        return withContext(Dispatchers.IO) {
-            val url = "https://api.openai.com/v1/chat/completions"
-            val apiKey = getApiKey(context)
-
-            val requestBody = json.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
-            val request = Request.Builder()
-                .url(url)
-                .addHeader("Authorization", "Bearer $apiKey")
-                .post(requestBody)
-                .build()
-
-            val response = client.newCall(request).execute()
-            if (response.isSuccessful) {
-                response.body?.string() ?: "Empty response"
-            } else {
-                "Error: ${response.message}"
-            }
-        }
     }
 
     private fun parseJsonResponse(responseString: String): String {
