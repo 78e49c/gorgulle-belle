@@ -18,18 +18,20 @@ import java.io.IOException
 class ApiRepository {
 
     private val client = OkHttpClient()
-    private val sessions = mutableMapOf<Int, MutableList<String>>()
 
     private fun getApiKey(context: Context): String {
         return context.getString(R.string.api_key)
     }
 
-    // API'ye mesaj gönderir
     fun sendMessage(context: Context, sessionId: Int, messages: List<Message>, callback: (String) -> Unit) {
         val apiKey = getApiKey(context)
         val url = "https://api.openai.com/v1/chat/completions"
 
-        val messagesJson = messages.joinToString(", ") { "{\"role\": \"${it.role}\", \"content\": \"${it.content}\"}" }
+        val messagesJson = messages.joinToString(", ") { message ->
+            val role = JSONObject.quote(message.role)
+            val content = JSONObject.quote(message.content)
+            "{\"role\": $role, \"content\": $content}"
+        }
 
         val json = """
         {
@@ -51,7 +53,6 @@ class ApiRepository {
             .build()
 
         client.newCall(request).enqueue(object : Callback {
-
             override fun onFailure(call: Call, e: IOException) {
                 e.printStackTrace()
                 callback("Network Error: ${e.message}")
@@ -66,7 +67,6 @@ class ApiRepository {
                 response.body?.let { responseBody ->
                     val responseString = responseBody.string()
                     val content = parseJsonResponse(responseString)
-                    sessions[sessionId]?.add("""{"role": "assistant", "content": "$content"}""")
                     callback(content)
                 } ?: run {
                     callback("Error: Empty response body")
@@ -75,11 +75,11 @@ class ApiRepository {
         })
     }
 
-    // API'ye senkron mesaj gönderir
-    suspend fun sendChatRequest(json: String): String {
+
+    suspend fun sendChatRequest(context: Context, json: String): String {
         return withContext(Dispatchers.IO) {
             val url = "https://api.openai.com/v1/chat/completions"
-            val apiKey = "YOUR_API_KEY_HERE" // Bu değeri config dosyasından veya güvenli bir yerden alın.
+            val apiKey = getApiKey(context)
 
             val requestBody = json.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
             val request = Request.Builder()
@@ -97,7 +97,7 @@ class ApiRepository {
         }
     }
 
-    fun parseJsonResponse(responseString: String): String {
+    private fun parseJsonResponse(responseString: String): String {
         return try {
             val jsonResponse = JSONObject(responseString)
             val choices = jsonResponse.getJSONArray("choices")
@@ -115,7 +115,7 @@ class ApiRepository {
         }
     }
 
-    fun handleError(response: Response): String {
+    private fun handleError(response: Response): String {
         return "HTTP Error: ${response.code} - ${response.message}"
     }
 }
