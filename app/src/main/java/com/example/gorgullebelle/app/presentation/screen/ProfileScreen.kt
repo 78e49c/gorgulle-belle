@@ -5,9 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -26,14 +24,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.gorgullebelle.R
 import com.example.gorgullebelle.app.presentation.components.ButtonComponent
 import com.example.gorgullebelle.app.presentation.components.CustomTopAppBar
+import com.example.gorgullebelle.app.presentation.components.ProfileRow
 import com.example.gorgullebelle.app.presentation.navigation.Route
-import com.example.gorgullebelle.ui.theme.GBTheme
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -126,44 +123,5 @@ fun ProfileScreen(
              }
          }
      }
- }
-}
-
-@Composable
-fun ProfileRow(title: String, value: String) {
- Column(
-     modifier = Modifier
-         .fillMaxWidth()
-         .padding(horizontal = 26.dp),
-     verticalArrangement = Arrangement.spacedBy(8.dp)
- ) {
-     Text(
-         text = title,
-         color = Color.Black,
-         style = MaterialTheme.typography.titleMedium.copy(
-             fontWeight = FontWeight(300),
-             fontSize = 16.sp
-         )
-     )
-     Spacer(modifier = Modifier
-         .height(1.dp)
-         .fillMaxWidth()
-         .background(Color.LightGray))
-     Text(
-         text = value,
-         color = Color.Black,
-         style = MaterialTheme.typography.titleMedium.copy(
-             fontWeight = FontWeight(500),
-             fontSize = 16.sp
-         )
-     )
- }
-}
-
-@Preview
-@Composable
-fun ProfileScreenPreview() {
- GBTheme {
-     ProfileScreen()
  }
 }
