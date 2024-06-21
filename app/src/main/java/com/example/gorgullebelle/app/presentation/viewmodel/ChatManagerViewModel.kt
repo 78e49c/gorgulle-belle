@@ -4,19 +4,14 @@ import android.app.Application
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.viewModelScope
-import com.example.gorgullebelle.app.data.ChatRequest
 import com.example.gorgullebelle.app.data.LocalStorageHelper
 import com.example.gorgullebelle.app.data.Message
 import com.example.gorgullebelle.app.data.MessageBuilder
 import com.example.gorgullebelle.app.data.api.ApiRepository
 import com.example.gorgullebelle.app.data.conversationPrompts
-import com.google.gson.Gson
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 
 class ChatManagerViewModel(application: Application) : AndroidViewModel(application) {
     private val context: Context = application.applicationContext
@@ -67,34 +62,11 @@ class ChatManagerViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     private fun sendToApi(sessionId: Int, messages: List<Message>) {
+        Log.d("ChatManagerViewModel", "Sending messages to API: $messages")
         repository.sendMessage(context, sessionId, messages) { response ->
             addMessageToSession(sessionId, "assistant: $response")
             saveSessions()
             Log.d("ChatManagerViewModel", "API response received and session saved: $response")
-        }
-    }
-
-    private fun triggerBotPrompt(sessionId: Int, promptUsageType: PromptUsageType) {
-        val prompt = conversationPrompts[sessionId]
-        val messageHistory = getSessionMessages(sessionId).value
-
-        val messages = MessageBuilder.buildMessageHistory(
-            messageHistory.map { Message(it.split(": ")[0], it.split(": ")[1]) },
-            null,
-            prompt.joinToString(" ") { it.content },
-            null
-        )
-
-        val chatRequest = ChatRequest(
-            model = "gpt-3.5-turbo",
-            messages = messages
-        )
-        val json = Gson().toJson(chatRequest)
-        viewModelScope.launch(Dispatchers.IO) {
-            val response = repository.sendChatRequest(context, json)
-            addMessageToSession(sessionId, "assistant: $response")
-            saveSessions()
-            Log.d("ChatManagerViewModel", "Bot prompt response received and session saved: $response")
         }
     }
 
@@ -113,24 +85,14 @@ class ChatManagerViewModel(application: Application) : AndroidViewModel(applicat
         return sessionMessages.getOrPut(sessionId) { MutableStateFlow(emptyList()) }
     }
 
-    fun getSelectedSessionMessages(): List<String> {
-        return sessionMessages[_selectedPackageIndex.value]?.value ?: emptyList()
-    }
-
-    fun resetSessionMessages(index: Int) {
-        if (index in sessionMessages.keys) {
-            sessionMessages[index]?.value = emptyList()
-            clearSessionMessages(index)
-            Log.d("ChatManagerViewModel", "Session messages reset: $index")
-        }
-    }
 
     private fun addMessageToSession(sessionId: Int, message: String) {
-        sessionMessages[sessionId]?.update { it + message }
-        Log.d("ChatManagerViewModel", "Message added: $message, Session: $sessionId")
+        sessionMessages.getOrPut(sessionId) { MutableStateFlow(emptyList()) }.update { it + message }
+        Log.d("ChatManagerViewModel", "Message added to session: $sessionId, Message: $message")
     }
 
-    enum class PromptUsageType {
-        SYSTEM
+    fun getPromptForPackage(packageIndex: Int): List<String> {
+        val prompts = conversationPrompts[packageIndex] ?: return emptyList()
+        return prompts.map { it.content }
     }
 }
