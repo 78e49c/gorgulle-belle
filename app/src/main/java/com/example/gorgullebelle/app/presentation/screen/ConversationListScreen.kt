@@ -95,7 +95,7 @@ fun ConversationListItem(
     navigate: (String) -> Unit
 ) {
     val messagesFlow = chatManagerViewModel.getSessionMessages(sessionId).collectAsState()
-
+    val lastMessage = messagesFlow.value.lastOrNull()?.removePrefix("user: ")?.removePrefix("assistant: ")?.removePrefix("system: ")
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -116,7 +116,10 @@ fun ConversationListItem(
         Column {
             Text(text = title, style = MaterialTheme.typography.titleMedium)
             Spacer(modifier = Modifier.height(4.dp))
-            Text(text = messagesFlow.value.lastOrNull() ?: "No messages yet", style = MaterialTheme.typography.bodyMedium)
+            Text(
+                text = lastMessage?.take(100) ?: "No messages yet",
+                style = MaterialTheme.typography.bodyMedium
+            )
         }
     }
 }
