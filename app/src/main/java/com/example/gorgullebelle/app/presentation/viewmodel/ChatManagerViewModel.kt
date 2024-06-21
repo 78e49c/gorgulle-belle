@@ -72,7 +72,10 @@ class ChatManagerViewModel(application: Application) : AndroidViewModel(applicat
 
     fun clearSessionMessages(packageIndex: Int) {
         val prompts = conversationPrompts[packageIndex] ?: listOf()
-        sessionMessages[packageIndex]?.value = prompts.map { "system: ${it.content}" }
+        sessionMessages[packageIndex]?.value = emptyList()
+        prompts.forEach { prompt ->
+            addMessageToSession(packageIndex, "system: ${prompt.content}")
+        }
         Log.d("ChatManagerViewModel", "Session messages cleared and prompts added: $packageIndex")
     }
 
