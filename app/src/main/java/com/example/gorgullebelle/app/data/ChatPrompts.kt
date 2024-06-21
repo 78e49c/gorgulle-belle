@@ -28,18 +28,4 @@ val samYolculuguMessages = gameMessages + listOf(
     Message("system", "When you believe the user has succeeded in their aim of convincing you to go to Damascus, you will respond with the specific code '78e49c' signifying the end of the game.")
 )
 
-
-val aiDedektifiMessagesAlways = listOf(
-    Message("system", "")
-)
-
-val gonulHasbihaliMessagesAlways = listOf(
-    Message("system", "")
-)
-
-val samYolculuguMessagesAlways = listOf(
-    Message("system", "")
-)
-
 val conversationPrompts = listOf(aiDedektifiMessages, gonulHasbihaliMessages, samYolculuguMessages)
-val conversationAlwaysPrompts = listOf(aiDedektifiMessagesAlways, gonulHasbihaliMessagesAlways, samYolculuguMessagesAlways)
