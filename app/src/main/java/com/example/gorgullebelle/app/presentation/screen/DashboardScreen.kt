@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Create
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -38,8 +38,8 @@ fun DashboardScreen(navigate: (String) -> Unit = {}) {
 
     val items = listOf(
         BottomNavItem("Profil", ImageVector.vectorResource(id = R.drawable.sharp_person_24), selectedItem == 0),
-        BottomNavItem("Konuşma", Icons.Default.Create , selectedItem == 1),
-        BottomNavItem("Seçim", Icons.Default.CheckCircle, selectedItem == 2)
+        BottomNavItem("Konuşma", Icons.Filled.Email , selectedItem == 1),
+        BottomNavItem("Seçim", Icons.Filled.CheckCircle, selectedItem == 2)
     )
 
     Scaffold(
