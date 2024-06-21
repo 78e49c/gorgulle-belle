@@ -1,25 +1,31 @@
 package com.example.gorgullebelle.app.data
 
 object MessageBuilder {
-    // Mesaj geçmişine kullanıcı, sistem ve asistan mesajlarını ekler
-    fun buildMessageHistory(messageHistory: List<Message>, userMessage: String?, systemMessage: String?, assistantMessage: String?): List<Message> {
-        val updatedMessages = messageHistory.toMutableList()
+    fun buildMessageHistory(
+        previousMessages: List<Message>,
+        userMessage: String,
+        assistantResponse: String?,
+        systemMessage: String?
+    ): List<Message> {
+        val messageHistory = mutableListOf<Message>()
 
-        // Sistem mesajı boş değilse, listeye ekle
+        // Önce önceki mesajları ekleyin
+        messageHistory.addAll(previousMessages)
+
+        // Kullanıcı mesajını ekleyin
+        messageHistory.add(Message("user", userMessage))
+
+        // Assistant yanıtını ekleyin
+        assistantResponse?.let {
+            messageHistory.add(Message("assistant", it))
+        }
+
+        // System mesajını ekleyin
         systemMessage?.let {
-            updatedMessages.add(Message("system", it))
+            messageHistory.add(Message("system", it))
         }
 
-        // Kullanıcı mesajı boş değilse, listeye ekle
-        userMessage?.let {
-            updatedMessages.add(Message("user", it))
-        }
-
-        // Asistan mesajı boş değilse, listeye ekle
-        assistantMessage?.let {
-            updatedMessages.add(Message("assistant", it))
-        }
-
-        return updatedMessages
+        return messageHistory
     }
 }
+
