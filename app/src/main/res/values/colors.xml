@@ -22,7 +22,7 @@
     <color name="grad_2">#FFFFFF</color>
     <color name="grad_1">#FFFFFF</color>
 
-    <color name="system_color">#FF9A9A</color>
-    <color name="user_color">#A5C387</color>
-    <color name="assistant_color">#63A3AA</color>
+    <color name="system_color">#E64A19</color>
+    <color name="user_color">#F57C00</color>
+    <color name="assistant_color">#0288D1</color>
 </resources>
