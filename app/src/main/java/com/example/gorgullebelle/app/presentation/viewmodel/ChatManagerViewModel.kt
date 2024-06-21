@@ -10,7 +10,6 @@ import com.example.gorgullebelle.app.data.LocalStorageHelper
 import com.example.gorgullebelle.app.data.Message
 import com.example.gorgullebelle.app.data.MessageBuilder
 import com.example.gorgullebelle.app.data.api.ApiRepository
-import com.example.gorgullebelle.app.data.conversationAlwaysPrompts
 import com.example.gorgullebelle.app.data.conversationPrompts
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
@@ -63,23 +62,20 @@ class ChatManagerViewModel(application: Application) : AndroidViewModel(applicat
             null
         )
 
+        // Tek seferde mesaj göndermek için sendToApi fonksiyonunu çağır
         sendToApi(sessionId, messages)
     }
 
     private fun sendToApi(sessionId: Int, messages: List<Message>) {
         repository.sendMessage(context, sessionId, messages) { response ->
             addMessageToSession(sessionId, "assistant: $response")
-            triggerBotPrompt(sessionId, PromptUsageType.ALWAYS)
             saveSessions()
             Log.d("ChatManagerViewModel", "API response received and session saved: $response")
         }
     }
 
     private fun triggerBotPrompt(sessionId: Int, promptUsageType: PromptUsageType) {
-        val prompt = when (promptUsageType) {
-            PromptUsageType.SYSTEM -> conversationPrompts[sessionId]
-            PromptUsageType.ALWAYS -> conversationAlwaysPrompts[sessionId]
-        }
+        val prompt = conversationPrompts[sessionId]
         val messageHistory = getSessionMessages(sessionId).value
 
         val messages = MessageBuilder.buildMessageHistory(
@@ -135,7 +131,6 @@ class ChatManagerViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     enum class PromptUsageType {
-        SYSTEM,
-        ALWAYS
+        SYSTEM
     }
 }
