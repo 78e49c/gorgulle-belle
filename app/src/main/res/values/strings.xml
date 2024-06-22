@@ -14,4 +14,6 @@
     <string name="register">Kaydol</string>
     <string name="login">Gir</string>
     <string name="out">Çık</string>
+    <string name="refresh_button">Refresh</string>
+
 </resources>
