@@ -5,17 +5,21 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.gorgullebelle.app.presentation.screen.ConversationListScreen
-import com.example.gorgullebelle.app.presentation.screen.DashboardScreen
-import com.example.gorgullebelle.app.presentation.screen.ExerciseListScreen
-import com.example.gorgullebelle.app.presentation.screen.ExerciseScreen
 import com.example.gorgullebelle.app.presentation.screen.ConversationScreen
+import com.example.gorgullebelle.app.presentation.screen.DashboardScreen
+import com.example.gorgullebelle.app.presentation.screen.QuestionListScreen
 import com.example.gorgullebelle.app.presentation.screen.ProfileScreen
+import com.example.gorgullebelle.app.presentation.screen.QuestionScreen
 import com.example.gorgullebelle.app.presentation.screen.SignInScreen
 import com.example.gorgullebelle.app.presentation.screen.SignUpScreen
 import com.example.gorgullebelle.app.presentation.viewmodel.ChatManagerViewModel
+import com.example.gorgullebelle.app.presentation.viewmodel.QuestionViewModel
 
 @Composable
-fun NavGraph(chatManagerViewModel: ChatManagerViewModel) {
+fun NavGraph(
+    chatManagerViewModel: ChatManagerViewModel,
+    questionViewModel: QuestionViewModel
+) {
     val navController = rememberNavController()
 
     NavHost(
@@ -73,18 +77,20 @@ fun NavGraph(chatManagerViewModel: ChatManagerViewModel) {
         }
 
         composable(Route.ExerciseScreen.route) {
-            ExerciseScreen(
+            QuestionScreen(
                 navigate = { route ->
                     navController.navigate(route)
-                }
+                },
+                questionViewModel = questionViewModel
             )
         }
 
         composable(Route.ExerciseListScreen.route) {
-            ExerciseListScreen(
+            QuestionListScreen(
                 navigate = { route ->
                     navController.navigate(route)
-                }
+                },
+                questionViewModel = questionViewModel
             )
         }
     }
