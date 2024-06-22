@@ -24,23 +24,23 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.gorgullebelle.R
-import com.example.gorgullebelle.app.presentation.viewmodel.ExerciseViewModel
+import com.example.gorgullebelle.app.presentation.viewmodel.QuestionViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun QuestionScreen(
     navigate: (String) -> Unit,
-    exerciseViewModel: ExerciseViewModel
+    questionViewModel: QuestionViewModel
 ) {
     val context = LocalContext.current
-    val apiResponse by exerciseViewModel.apiResponse.observeAsState("")
-    val concept by exerciseViewModel.concept.observeAsState()
+    val apiResponse by questionViewModel.apiResponse.observeAsState("")
+    val concept by questionViewModel.concept.observeAsState()
 
     // Concept değeri değiştiğinde fetchQuestion çağrısı
     LaunchedEffect(concept) {
         Log.d("QuestionScreen", "LaunchedEffect called with concept: $concept")
         concept?.let {
-            exerciseViewModel.fetchQuestion(context)
+            questionViewModel.fetchQuestion(context)
         }
     }
 
@@ -68,7 +68,7 @@ fun QuestionScreen(
             IconButton(
                 onClick = {
                     Log.d("QuestionScreen", "Refresh button clicked")
-                    exerciseViewModel.fetchQuestion(context)
+                    questionViewModel.fetchQuestion(context)
                 }
             ) {
                 Icon(
