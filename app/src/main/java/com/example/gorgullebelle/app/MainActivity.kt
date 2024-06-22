@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.gorgullebelle.app.presentation.navigation.NavGraph
 import com.example.gorgullebelle.app.presentation.viewmodel.ChatManagerViewModel
+import com.example.gorgullebelle.app.presentation.viewmodel.ExerciseViewModel
 import com.example.gorgullebelle.ui.theme.GBTheme
 
 class MainActivity : ComponentActivity() {
@@ -14,10 +15,12 @@ class MainActivity : ComponentActivity() {
         setContent {
             GBTheme {
                 val chatManagerViewModel: ChatManagerViewModel = viewModel()
-                NavGraph(chatManagerViewModel = chatManagerViewModel)
+                val exerciseViewModel: ExerciseViewModel = viewModel()
+                NavGraph(
+                    chatManagerViewModel = chatManagerViewModel,
+                    exerciseViewModel = exerciseViewModel
+                )
             }
         }
     }
 }
-
-
