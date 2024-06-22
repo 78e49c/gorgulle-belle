@@ -37,7 +37,7 @@ fun DashboardScreen(navigate: (String) -> Unit = {}) {
     var selectedItem by remember { mutableStateOf(0) }
 
     val items = listOf(
-        BottomNavItem("Profil", ImageVector.vectorResource(id = R.drawable.sharp_person_24), selectedItem == 0),
+        BottomNavItem("Kimlik", ImageVector.vectorResource(id = R.drawable.sharp_person_24), selectedItem == 0),
         BottomNavItem("Konuşma", Icons.Filled.Email , selectedItem == 1),
         BottomNavItem("Seçim", Icons.Filled.CheckCircle, selectedItem == 2)
     )
@@ -50,7 +50,7 @@ fun DashboardScreen(navigate: (String) -> Unit = {}) {
                 onItemClick = { item ->
                     selectedItem = items.indexOf(item)
                     when (item.label) {
-                        "Profil" -> navigate(Route.ProfileScreen.route)
+                        "Kimlik" -> navigate(Route.ProfileScreen.route)
                         "Konuşma" -> navigate(Route.ConversationListScreen.route)
                         "Seçim" -> navigate(Route.ExerciseListScreen.route)
                     }
