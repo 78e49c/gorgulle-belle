@@ -14,11 +14,21 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonDefaults
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,49 +38,79 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.gorgullebelle.R
-import com.example.gorgullebelle.app.data.Question
 import com.example.gorgullebelle.app.presentation.screen.ExerciseItem
-
 
 @Composable
 fun QuestionComponent(
-    question: Question,
-    selectedChoice: Int,
-    onChoiceSelected: (Int, Int) -> Unit,
-    onNextQuestion: () -> Unit
+    key: Int,  // key parametresini ekleyelim
+    questionText: String,
+    explanation: String,
+    choices: List<Pair<String, Int>>,
+    onSubmit: (Pair<String, Int>?, Boolean) -> Unit
 ) {
-    Column(modifier = Modifier.padding(16.dp)) {
-        Text(text = question.explanation)
-        Text(text = question.questionText)
+    var selectedChoice by remember(key) { mutableStateOf<Int?>(null) }
+    var isSubmitted by remember(key) { mutableStateOf(false) }
 
-        question.choices.forEachIndexed { index, choice ->
-            Card(
-                modifier = Modifier
-                    .padding(vertical = 4.dp)
-                    .clickable {
-                        onChoiceSelected(choice.score, index)
-                    }
-            ) {
+    Surface(
+        modifier = Modifier
+            .padding(16.dp)
+            .fillMaxSize()
+    ) {
+        LazyColumn {
+            item {
                 Text(
-                    text = choice.answer,
-                    modifier = Modifier.padding(16.dp)
+                    text = questionText,
+                    style = MaterialTheme.typography.headlineSmall,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+                Text(
+                    text = explanation,
+                    style = MaterialTheme.typography.labelLarge,
+                    modifier = Modifier.padding(bottom = 8.dp)
                 )
             }
-        }
 
-        if (selectedChoice != -1) {
-            Text(
-                text = "Next Question",
-                modifier = Modifier
-                    .padding(top = 16.dp)
-                    .clickable {
-                        onNextQuestion()
+            itemsIndexed(choices) { index, choice ->
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(vertical = 4.dp)
+                ) {
+                    RadioButton(
+                        selected = selectedChoice == index,
+                        onClick = { selectedChoice = index },
+                        colors = RadioButtonDefaults.colors(selectedColor = Color.Black)
+                    )
+                    Text(
+                        text = choice.first,
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.padding(start = 8.dp)
+                    )
+                }
+            }
+
+            item {
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Button(
+                    onClick = {
+                        if (isSubmitted) {
+                            onSubmit(null, true)  // Already submitted message
+                        } else {
+                            selectedChoice?.let {
+                                onSubmit(choices[it], false)
+                                isSubmitted = true
+                            } ?: run {
+                                onSubmit(null, false)  // No option selected message
+                            }
+                        }
                     }
-            )
+                ) {
+                    Text("Submit Answer")
+                }
+            }
         }
     }
 }
-
 
 
 
