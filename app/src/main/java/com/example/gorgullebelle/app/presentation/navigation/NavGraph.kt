@@ -7,18 +7,20 @@ import androidx.navigation.compose.rememberNavController
 import com.example.gorgullebelle.app.presentation.screen.ConversationListScreen
 import com.example.gorgullebelle.app.presentation.screen.ConversationScreen
 import com.example.gorgullebelle.app.presentation.screen.DashboardScreen
-import com.example.gorgullebelle.app.presentation.screen.QuestionListScreen
 import com.example.gorgullebelle.app.presentation.screen.ProfileScreen
+import com.example.gorgullebelle.app.presentation.screen.QuestionListScreen
 import com.example.gorgullebelle.app.presentation.screen.QuestionScreen
 import com.example.gorgullebelle.app.presentation.screen.SignInScreen
 import com.example.gorgullebelle.app.presentation.screen.SignUpScreen
 import com.example.gorgullebelle.app.presentation.viewmodel.ChatManagerViewModel
+import com.example.gorgullebelle.app.presentation.viewmodel.ProfileViewModel
 import com.example.gorgullebelle.app.presentation.viewmodel.QuestionViewModel
 
 @Composable
 fun NavGraph(
     chatManagerViewModel: ChatManagerViewModel,
-    questionViewModel: QuestionViewModel
+    questionViewModel: QuestionViewModel,
+    profileViewModel: ProfileViewModel
 ) {
     val navController = rememberNavController()
 
@@ -53,6 +55,7 @@ fun NavGraph(
         composable(Route.ExperienceScreen.route) {
             ConversationScreen(
                 chatManagerViewModel = chatManagerViewModel,
+                profileViewModel = profileViewModel,
                 navigate = { route ->
                     navController.navigate(route)
                 }
@@ -72,7 +75,8 @@ fun NavGraph(
             ProfileScreen(
                 navigate = { route ->
                     navController.navigate(route)
-                }
+                },
+                profileViewModel = profileViewModel  // ProfileViewModel'i buradan geçiyoruz
             )
         }
 
@@ -81,7 +85,8 @@ fun NavGraph(
                 navigate = { route ->
                     navController.navigate(route)
                 },
-                questionViewModel = questionViewModel
+                questionViewModel = questionViewModel,
+                profileViewModel = profileViewModel
             )
         }
 
