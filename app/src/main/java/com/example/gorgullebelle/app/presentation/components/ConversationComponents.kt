@@ -230,6 +230,7 @@ fun MessageInput(onSend: (String) -> Unit) {
             value = messageText,
             onValueChange = { messageText = it },
             modifier = Modifier
+                .background(Color.White)
                 .weight(1f)
                 .zIndex(1f),
             keyboardOptions = KeyboardOptions.Default.copy(
