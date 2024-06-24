@@ -12,8 +12,8 @@
     <string name="show_password">Gizle</string>
     <string name="policy">By continuing you agree to our Terms of Service and Privacy Policy</string>
     <string name="register">Kaydol</string>
-    <string name="login">Gir</string>
-    <string name="out">Çık</string>
+    <string name="login">Giriş yap</string>
+    <string name="out">Çıkış yap</string>
     <string name="refresh_button">Refresh</string>
 
 </resources>
