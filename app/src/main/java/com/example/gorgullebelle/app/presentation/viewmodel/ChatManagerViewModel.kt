@@ -4,11 +4,11 @@ import android.app.Application
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import com.example.gorgullebelle.app.data.ApiRepository
 import com.example.gorgullebelle.app.data.LocalStorageHelper
-import com.example.gorgullebelle.app.data.Message
 import com.example.gorgullebelle.app.data.MessageBuilder
-import com.example.gorgullebelle.app.data.api.ApiRepository
 import com.example.gorgullebelle.app.data.conversationPrompts
+import com.example.gorgullebelle.app.data.dataclass.Message
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
