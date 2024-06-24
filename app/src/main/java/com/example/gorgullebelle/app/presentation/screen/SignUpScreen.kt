@@ -1,22 +1,13 @@
 package com.example.gorgullebelle.app.presentation.screen
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,7 +25,6 @@ import com.example.gorgullebelle.app.presentation.components.HeadingTextComponen
 import com.example.gorgullebelle.app.presentation.components.MyTextField
 import com.example.gorgullebelle.app.presentation.components.NormalTextComponent
 import com.example.gorgullebelle.app.presentation.components.PasswordTextField
-import com.example.gorgullebelle.app.presentation.components.gradientBackground1
 import com.example.gorgullebelle.app.presentation.navigation.Route
 
 
@@ -46,13 +36,6 @@ fun SignUpScreen(navigate: (String) -> Unit = {}) {
             .fillMaxSize()
     )
     {
-
-        Surface(
-            modifier = Modifier
-                .fillMaxSize()
-                .gradientBackground1()
-                .alpha(0.1f)
-        ) {}
 
         Column(
             Modifier
@@ -99,6 +82,9 @@ fun SignUpScreen(navigate: (String) -> Unit = {}) {
                     labelValue = stringResource(id = R.string.password)
                     , painterResource(id = R.drawable.baseline_key_24)
                 )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
                 CheckboxCompoment(value = stringResource(id = R.string.policy))
 
                 Spacer(modifier = Modifier.weight(1f))
@@ -110,7 +96,12 @@ fun SignUpScreen(navigate: (String) -> Unit = {}) {
                     }
                 )
 
+                Spacer(modifier = Modifier.height(16.dp))
+
                 ClickableLoginTextComponent(navigate = navigate, route = Route.SignInScreen.route, "Giriş yap " ,"Hesabın varsa ")
+
+                Spacer(modifier = Modifier.height(16.dp))
+
                 ClickableLoginTextComponent(navigate = navigate, route = Route.DashboardScreen.route," Geri dön ","",)
             }
 
