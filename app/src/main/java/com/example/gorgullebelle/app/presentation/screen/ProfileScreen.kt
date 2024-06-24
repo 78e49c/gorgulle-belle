@@ -2,6 +2,7 @@ package com.example.gorgullebelle.app.presentation.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,14 +11,20 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.FractionalThreshold
+import androidx.compose.material.rememberSwipeableState
+import androidx.compose.material.swipeable
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,21 +37,33 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.gorgullebelle.R
-import com.example.gorgullebelle.app.presentation.components.ButtonComponent
+import com.example.gorgullebelle.app.presentation.components.ClickableLoginTextComponent
 import com.example.gorgullebelle.app.presentation.components.CustomTopAppBar
 import com.example.gorgullebelle.app.presentation.components.ProfileRow
 import com.example.gorgullebelle.app.presentation.navigation.Route
 import com.example.gorgullebelle.app.presentation.viewmodel.ProfileViewModel
+import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
 fun ProfileScreen(
     navigate: (String) -> Unit = {},
-    profileViewModel: ProfileViewModel = viewModel()  // Parametre olarak alalım
+    profileViewModel: ProfileViewModel = viewModel()
 ) {
     val score by profileViewModel.score.observeAsState(0)
+    val swipeableState = rememberSwipeableState(initialValue = 0)
+    val scope = rememberCoroutineScope()
+    val anchors = mapOf(0f to 0, -300f to 1) // Adjust the swipe distance as needed
 
-    Surface(modifier = Modifier.fillMaxSize()) {
+    Surface(modifier = Modifier
+        .fillMaxSize()
+        .swipeable(
+            state = swipeableState,
+            anchors = anchors,
+            thresholds = { _, _ -> FractionalThreshold(0.3f) },
+            orientation = Orientation.Horizontal
+        )
+    ) {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             topBar = {
@@ -105,13 +124,22 @@ fun ProfileScreen(
                         .align(Alignment.BottomCenter)
                         .padding(bottom = 40.dp)
                 ) {
-                    ButtonComponent(
-                        value = stringResource(id = R.string.out),
-                        onClick = {
-                            navigate.invoke(Route.SignInScreen.route)
-                        }
+                    ClickableLoginTextComponent(
+                        navigate = navigate,
+                        route = Route.SignInScreen.route,
+                        stringResource(id = R.string.out),
+                        ""
                     )
                 }
+            }
+        }
+    }
+
+    LaunchedEffect(swipeableState.currentValue) {
+        if (swipeableState.currentValue == 1) {
+            navigate(Route.DashboardScreen.route)
+            scope.launch {
+                swipeableState.snapTo(0)
             }
         }
     }
