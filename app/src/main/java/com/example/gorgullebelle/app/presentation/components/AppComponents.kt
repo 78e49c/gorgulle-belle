@@ -1,18 +1,9 @@
 package com.example.gorgullebelle.app.presentation.components
 
 
-//import androidx.compose.foundation.gestures.ModifierLocalScrollableContainerProvider.value
-//import androidx.compose.foundation.gestures.ModifierLocalScrollableContainerProvider.value
-//import androidx.compose.foundation.gestures.ModifierLocalScrollableContainerProvider.value
-//import androidx.compose.foundation.gestures.ModifierLocalScrollableContainerProvider.value
-//import androidx.compose.foundation.gestures.ModifierLocalScrollableContainerProvider.value
-
-
-// If you're using vector drawables for icons
-
-
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -43,16 +34,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.gorgullebelle.R
+import com.example.gorgullebelle.app.data.dataclass.BottomNavItem
+import com.example.gorgullebelle.app.data.dataclass.CarouselItem
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -110,10 +101,11 @@ fun CardItem(
         modifier = modifier
             .padding(8.dp)
             .fillMaxWidth()
+            .border(2.dp,(colorResource(id = R.color.card_border_color)),shape = RoundedCornerShape(8.dp))
     ) {
         Column(
             modifier = Modifier
-                .background(Color.LightGray)
+                .background(colorResource(id = R.color.card_color))
                 .padding(16.dp)
                 .width(232.dp)
                 .height(420.dp)
@@ -131,12 +123,14 @@ fun CardItem(
                 text = title,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(vertical = 4.dp)
+                modifier = Modifier.padding(vertical = 4.dp),
+                color = colorResource(id = R.color.dashboard_text_color)
             )
             Text(
                 text = body,
                 fontSize = 16.sp,
-                modifier = Modifier.padding(vertical = 4.dp)
+                modifier = Modifier.padding(vertical = 4.dp),
+                color = colorResource(id = R.color.dashboard_text_color)
             )
             Spacer(modifier = Modifier.weight(1f))
             OutlinedButton(
@@ -144,11 +138,13 @@ fun CardItem(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp)
+                    //.border(2.dp,Color.Black)
             ) {
                 Text(
                     text = buttonText,
                     fontSize = 14.sp,
-                    color = Color.Black)
+                    color = colorResource(id = R.color.dashboard_text_color)
+                )
             }
         }
     }
@@ -168,6 +164,7 @@ fun Carousel(
             text = title,
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
+            color = colorResource(id = R.color.dashboard_text_color),
             modifier = Modifier
                 .padding(horizontal = 16.dp)
                 .clickable { onTitleClick() }
@@ -197,13 +194,6 @@ fun Carousel(
     }
 }
 
-data class CarouselItem(
-    val id: Int,
-    val imageRes: Int,
-    val title: String,
-    val body: String,
-    val buttonText: String
-)
 
 
 
@@ -266,7 +256,7 @@ fun BottomNavigationBar(
     BottomNavigation(
         modifier = modifier,
         elevation = 8.dp,
-        backgroundColor = Color.LightGray
+        backgroundColor = (colorResource(id = R.color.bottom_navigation_color))
     ) {
         items.forEach { item ->
             BottomNavigationItem(
@@ -280,65 +270,5 @@ fun BottomNavigationBar(
 }
 
 
-data class BottomNavItem(
-    val label: String,
-    val icon: ImageVector,
-    val isSelected: Boolean = false
-)
 
-
-
-@Composable
-fun Modifier.gradientBackground1(): Modifier = this
-    .background(
-        brush = Brush.linearGradient(
-            colors =  listOf(
-                colorResource(id = R.color.grad_3),
-                colorResource(id = R.color.grad_2),
-                colorResource(id = R.color.grad_1),
-                colorResource(id = R.color.grad_0)
-            )
-        )
-    )
-
-@Composable
-fun Modifier.gradientBackground2(): Modifier = this
-    .background(
-        brush = Brush.linearGradient(
-            colors =  listOf(
-                colorResource(id = R.color.grad_0),
-                colorResource(id = R.color.grad_3),
-                colorResource(id = R.color.grad_2),
-                colorResource(id = R.color.grad_1)
-            )
-        )
-    )
-
-
-
-@Composable
-fun Modifier.gradientBackground3(): Modifier = this
-    .background(
-        brush = Brush.linearGradient(
-            colors =  listOf(
-                colorResource(id = R.color.grad_1),
-                colorResource(id = R.color.grad_0),
-                colorResource(id = R.color.grad_3),
-                colorResource(id = R.color.grad_2)
-            )
-        )
-    )
-
-@Composable
-fun Modifier.gradientBackground4(): Modifier = this
-    .background(
-        brush = Brush.linearGradient(
-            colors =  listOf(
-                colorResource(id = R.color.grad_2),
-                colorResource(id = R.color.grad_1),
-                colorResource(id = R.color.grad_0),
-                colorResource(id = R.color.grad_3)
-            )
-        )
-    )
 
