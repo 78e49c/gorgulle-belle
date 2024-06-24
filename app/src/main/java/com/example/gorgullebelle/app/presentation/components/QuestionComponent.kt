@@ -2,6 +2,7 @@ package com.example.gorgullebelle.app.presentation.components
 
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,7 +23,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonDefaults
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -42,7 +42,7 @@ import com.example.gorgullebelle.app.presentation.screen.ExerciseItem
 
 @Composable
 fun QuestionComponent(
-    key: Int,  // key parametresini ekleyelim
+    key: Int,
     questionText: String,
     explanation: String,
     choices: List<Pair<String, Int>>,
@@ -51,72 +51,99 @@ fun QuestionComponent(
     var selectedChoice by remember(key) { mutableStateOf<Int?>(null) }
     var isSubmitted by remember(key) { mutableStateOf(false) }
 
-    Surface(
+    Column(
         modifier = Modifier
             .padding(16.dp)
             .fillMaxSize()
     ) {
-        LazyColumn {
-            item {
-                Text(
-                    text = questionText,
-                    style = MaterialTheme.typography.headlineSmall,
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
-                Text(
-                    text = explanation,
-                    style = MaterialTheme.typography.labelLarge,
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
-            }
-
-            itemsIndexed(choices) { index, choice ->
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(vertical = 4.dp)
-                ) {
-                    RadioButton(
-                        selected = selectedChoice == index,
-                        onClick = { selectedChoice = index },
-                        colors = RadioButtonDefaults.colors(selectedColor = Color.Black)
+        Box(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth()
+        ) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                item {
+                    Text(
+                        text = questionText,
+                        style = MaterialTheme.typography.headlineSmall,
+                        modifier = Modifier.padding(bottom = 8.dp)
                     )
                     Text(
-                        text = choice.first,
-                        style = MaterialTheme.typography.bodyLarge,
-                        modifier = Modifier.padding(start = 8.dp)
+                        text = explanation,
+                        style = MaterialTheme.typography.labelLarge,
+                        modifier = Modifier.padding(bottom = 8.dp)
                     )
                 }
-            }
 
-            item {
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Button(
-                    onClick = {
-                        if (isSubmitted) {
-                            onSubmit(null, true)  // Already submitted message
-                        } else {
-                            selectedChoice?.let {
-                                onSubmit(choices[it], false)
-                                isSubmitted = true
-                            } ?: run {
-                                onSubmit(null, false)  // No option selected message
-                            }
-                        }
+                itemsIndexed(choices) { index, choice ->
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(vertical = 4.dp)
+                    ) {
+                        RadioButton(
+                            selected = selectedChoice == index,
+                            onClick = { selectedChoice = index },
+                            colors = RadioButtonDefaults.colors(selectedColor = Color.Black)
+                        )
+                        Text(
+                            text = choice.first,
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier.padding(start = 8.dp)
+                        )
                     }
-                ) {
-                    Text("Submit Answer")
                 }
             }
         }
+
+        Button(
+            onClick = {
+                if (isSubmitted) {
+                    onSubmit(null, true)  // Already submitted message
+                } else {
+                    selectedChoice?.let {
+                        onSubmit(choices[it], false)
+                        isSubmitted = true
+                    } ?: run {
+                        onSubmit(null, false)  // No option selected message
+                    }
+                }
+            },
+            modifier = Modifier
+                .align(Alignment.End)
+                .padding(top = 16.dp)
+        ) {
+            Text("Submit Answer")
+        }
+    }
+}
+
+
+@Composable
+fun InfoComponent(message: String) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+            .padding(8.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = message,
+            style = MaterialTheme.typography.titleLarge,
+            color = Color.Gray
+        )
     }
 }
 
 
 
 
+
 @Composable
-fun ExerciseItemList(
+fun QuestionItemList(
     exerciseItems: List<ExerciseItem>,
     onItemClick: (ExerciseItem) -> Unit
 ) {
@@ -127,10 +154,9 @@ fun ExerciseItemList(
         if (exerciseItems.isNotEmpty()) {
             item {
                 val topItem = exerciseItems[0]
-                ExerciseCardItem(
+                QuestionCardItem(
                     imageRes = topItem.imageResId,
                     title = topItem.title,
-                    body = topItem.body,
                     onButtonClick = { onItemClick(topItem) },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -140,10 +166,9 @@ fun ExerciseItemList(
             items(exerciseItems.drop(1).chunked(2)) { rowItems ->
                 Row(modifier = Modifier.padding(8.dp)) {
                     for (item in rowItems) {
-                        ExerciseCardItem(
+                        QuestionCardItem(
                             imageRes = item.imageResId,
                             title = item.title,
-                            body = item.body,
                             onButtonClick = { onItemClick(item) },
                             modifier = Modifier
                                 .weight(1f)
@@ -160,10 +185,9 @@ fun ExerciseItemList(
 
 
 @Composable
-fun ExerciseCardItem(
+fun QuestionCardItem(
     imageRes: Int,
     title: String,
-    body: String,
     onButtonClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -192,8 +216,6 @@ fun ExerciseCardItem(
             }
             Spacer(modifier = Modifier.height(8.dp))
             Text(text = title, fontSize = 18.sp)
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(text = body, fontSize = 14.sp, color = Color.Gray)
         }
     }
 }
@@ -202,66 +224,10 @@ fun ExerciseCardItem(
 @Preview(showBackground = true)
 @Composable
 fun PreviewExerciseCardItem() {
-    ExerciseCardItem(
+    QuestionCardItem(
         imageRes = R.drawable.konu_tespiti,
         title = "Exercise Title",
-        body = "2/41",
         onButtonClick = { /* Do something */ }
     )
 }
-
-
-/*
-@Composable
-fun QuestionComponent(
-    question: Question,
-    selectedChoice: Int,
-    onChoiceSelected: (Int, Int) -> Unit,
-    onNextQuestion: () -> Unit
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-    ) {
-        Text(
-            text = question.text,
-            fontSize = 20.sp,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-
-        question.choices.forEachIndexed { index, choice ->
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable {
-                        onChoiceSelected(choice.score, index)
-                    }
-                    .padding(vertical = 4.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                RadioButton(
-                    selected = (selectedChoice == index),
-                    onClick = {
-                        onChoiceSelected(choice.score, index)
-                    }
-                )
-                Text(text = choice.text, fontSize = 16.sp)
-            }
-        }
-
-        // Button to move to the next question
-        //Spacer(modifier = Modifier.height(16.dp))
-        Spacer(modifier = Modifier.weight(0.2f))
-
-        Row {
-            Spacer(modifier = Modifier.weight(0.5f))
-            Button( onClick = { onNextQuestion() }) {
-                Text(text = "Sonraki soru")
-            }
-        }
-
-    }
-}
-*/
 
