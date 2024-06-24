@@ -299,23 +299,26 @@ fun CheckboxCompoment(value: String){
 
 @Composable
 fun ClickableTextComponent(value: String){
-    val text1 = "By continuing you agree to our "
-    val text2 = "Terms of Service "
-    val text3 = "and "
-    val text4 = "Privacy Policy"
+    val text1 = "Devam ederek "
+    val text2 = "Hizmet Şartlarımızı "
+    val text3 = "ve "
+    val text4 = "Gizlilik Politikamızı "
+    val text5 = "kabul etmiş olursunuz."
+
+
 
     val annotatedString = buildAnnotatedString {
         append(text1)
-        withStyle(style = SpanStyle(color = colorResource(id = R.color.purple_700))){
+        withStyle(style = SpanStyle(color = colorResource(id = R.color.clickable_text_color))){
             pushStringAnnotation(tag = text2, annotation = text2)
             append(text2)
         }
         append(text3)
-        withStyle(style = SpanStyle(color = colorResource(id = R.color.purple_700))){
+        withStyle(style = SpanStyle(color = colorResource(id = R.color.clickable_text_color))){
             pushStringAnnotation(tag = text4, annotation = text4)
             append(text4)
         }
-
+        append(text5)
     }
     ClickableText(text = annotatedString, onClick ={offset ->
 
@@ -370,7 +373,7 @@ fun ClickableLoginTextComponent(navigate: (String) -> Unit = {}, route: String, 
     val annotatedString = buildAnnotatedString {
         append(plain)
 
-        withStyle(style = SpanStyle(color = colorResource(id = R.color.purple_700))){
+        withStyle(style = SpanStyle(color = colorResource(id = R.color.clickable_text_color))){
             pushStringAnnotation(tag = clickable, annotation = clickable)
             append(clickable)
         }
