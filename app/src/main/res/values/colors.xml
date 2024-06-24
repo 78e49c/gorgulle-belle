@@ -11,6 +11,12 @@
     <color name="secondary">#21CCB7</color>
     <color name="background">#FF0000</color>
 
+    <color name="summer1">#606c38</color>
+    <color name="summer2">#283618</color>
+    <color name="summer3">#fefae0</color>
+    <color name="summer4">#dda15e</color>
+    <color name="summer5">#bc6c25</color>
+
     <color name="transparent_background">#00FFFFFF</color>
     <color name="half_transparent_background">#80FFFFFF</color>
     <color name="over_transparent_background">#40FFFFFF</color>
@@ -22,7 +28,30 @@
     <color name="grad_2">#FFFFFF</color>
     <color name="grad_1">#FFFFFF</color>
 
-    <color name="system_color">#E64A19</color>
-    <color name="user_color">#F57C00</color>
-    <color name="assistant_color">#0288D1</color>
+    <color name="system_color">#81C784</color>
+    <color name="user_color">#FF8A65</color>
+    <color name="assistant_color">#4DB6AC</color>
+
+    <color name="clickable_text_color">#00796B</color>
+
+    <color name="card_color">#FFFFFF</color>
+    <color name="card_border_color">#50888A</color>
+
+
+    <color name="bottom_navigation_color">#FBFBFB</color>
+
+
+    <color name="dashboard_background_color">#FFFFFF</color>
+    <color name="conversation_list_background_color">#DFE6E5</color>
+    <color name="conversation_background_color">#DFE6E5</color>
+    <color name="profile_background_color">#DFE6E5</color>
+    <color name="question_list_background_color">#DFE6E5</color>
+    <color name="question_background_color">#DFE6E5</color>
+    <color name="sign_in_background_color">#DFE6E5</color>
+    <color name="sign_up_background_color">#DFE6E5</color>
+
+
+    <color name="dashboard_text_color">#434343</color>
+
+
 </resources>
