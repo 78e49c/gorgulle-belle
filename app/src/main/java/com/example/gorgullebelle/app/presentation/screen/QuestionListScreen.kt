@@ -13,7 +13,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.example.gorgullebelle.R
 import com.example.gorgullebelle.app.presentation.components.CustomTopAppBar
-import com.example.gorgullebelle.app.presentation.components.ExerciseItemList
+import com.example.gorgullebelle.app.presentation.components.QuestionItemList
 import com.example.gorgullebelle.app.presentation.navigation.Route
 import com.example.gorgullebelle.app.presentation.viewmodel.QuestionViewModel
 
@@ -47,7 +47,7 @@ fun QuestionListScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            ExerciseItemList(
+            QuestionItemList(
                 exerciseItems = exerciseItems,
                 onItemClick = { item ->
                     questionViewModel.setConcept(item.concept)
