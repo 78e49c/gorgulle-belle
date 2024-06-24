@@ -4,9 +4,9 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.gorgullebelle.app.data.Choice
-import com.example.gorgullebelle.app.data.Question
-import com.example.gorgullebelle.app.data.api.ApiRepository
+import com.example.gorgullebelle.app.data.ApiRepository
+import com.example.gorgullebelle.app.data.dataclass.Choice
+import com.example.gorgullebelle.app.data.dataclass.Question
 import com.example.gorgullebelle.app.data.questionPrompts
 
 class QuestionViewModel : ViewModel() {
