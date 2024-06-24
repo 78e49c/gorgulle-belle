@@ -1,6 +1,7 @@
 package com.example.gorgullebelle.app.presentation.screen
 
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,16 +19,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.example.gorgullebelle.R
-import com.example.gorgullebelle.app.presentation.components.BottomNavItem
+import com.example.gorgullebelle.app.data.dataclass.BottomNavItem
+import com.example.gorgullebelle.app.data.dataclass.CarouselItem
 import com.example.gorgullebelle.app.presentation.components.BottomNavigationBar
-import com.example.gorgullebelle.app.presentation.components.CarouselItem
 import com.example.gorgullebelle.app.presentation.components.MultiCarousel
-import com.example.gorgullebelle.app.presentation.components.gradientBackground3
 import com.example.gorgullebelle.app.presentation.navigation.Route
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -62,19 +62,13 @@ fun DashboardScreen(navigate: (String) -> Unit = {}) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
+
         ) {
-            Surface(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .gradientBackground3()
-                    .alpha(0.1f)
-            ) {}
-
-
 
             Column(
                 modifier = Modifier
                     .fillMaxSize()
+                    .background(colorResource(id = R.color.dashboard_background_color))
             ) {
 
                 Spacer(modifier = Modifier.height(20.dp))
@@ -148,7 +142,7 @@ fun DashboardScreen(navigate: (String) -> Unit = {}) {
                     },
                     onButtonClick = { itemId ->
                         Log.d("Carousel", "Button in item $itemId clicked")
-                        // Add navigation or other action here
+
                     }
                 )
             }
