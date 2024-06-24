@@ -33,6 +33,7 @@ fun ConversationListScreen(navigate: (String) -> Unit = {}, chatManagerViewModel
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
+
             Column {
                 LazyColumn(
                     modifier = Modifier
