@@ -26,7 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.example.gorgullebelle.app.data.Question
+import com.example.gorgullebelle.app.data.dataclass.Question
 import com.example.gorgullebelle.app.presentation.components.InfoComponent
 import com.example.gorgullebelle.app.presentation.components.QuestionComponent
 import com.example.gorgullebelle.app.presentation.viewmodel.ProfileViewModel
