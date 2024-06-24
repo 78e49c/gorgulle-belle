@@ -4,6 +4,8 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.gorgullebelle.app.data.Choice
+import com.example.gorgullebelle.app.data.Question
 import com.example.gorgullebelle.app.data.api.ApiRepository
 import com.example.gorgullebelle.app.data.questionPrompts
 
@@ -44,5 +46,27 @@ class QuestionViewModel : ViewModel() {
             Log.d("ExerciseViewModel", "Received response: $response")
             _apiResponse.postValue(response)
         }
+    }
+
+    fun parseApiResponse(apiResponse: String): Question? {
+        val explanationPattern = Regex("""explanation:\s*"([^"]*)"""", RegexOption.DOT_MATCHES_ALL)
+        val mainTextPattern = Regex("""mainText:\s*"([^"]*)"""", RegexOption.DOT_MATCHES_ALL)
+        val answerScorePattern = Regex("""answer(\d+):\s*"([^"]*)"\s*score\1:\s*"([^"]*)"""", RegexOption.DOT_MATCHES_ALL)
+
+        val explanationMatch = explanationPattern.find(apiResponse)
+        val mainTextMatch = mainTextPattern.find(apiResponse)
+        val answerScoreMatches = answerScorePattern.findAll(apiResponse)
+
+        if (explanationMatch != null && mainTextMatch != null && answerScoreMatches.count() == 4) {
+            val explanation = explanationMatch.groupValues[1].trim()
+            val mainText = mainTextMatch.groupValues[1].trim()
+            val choices = answerScoreMatches.map { match ->
+                Choice(match.groupValues[2].trim(), match.groupValues[3].trim().toInt())
+            }.toList()
+
+            return Question(explanation, mainText, choices)
+        }
+
+        return null
     }
 }
