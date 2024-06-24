@@ -21,7 +21,6 @@ import com.example.gorgullebelle.app.presentation.components.HeadingTextComponen
 import com.example.gorgullebelle.app.presentation.components.MyTextField
 import com.example.gorgullebelle.app.presentation.components.NormalTextComponent
 import com.example.gorgullebelle.app.presentation.components.PasswordTextField
-import com.example.gorgullebelle.app.presentation.components.gradientBackground2
 import com.example.gorgullebelle.app.presentation.navigation.Route
 
 
@@ -33,13 +32,6 @@ fun SignInScreen(navigate: (String) -> Unit = {}) {
             .fillMaxSize()
     )
     {
-
-        Surface(
-            modifier = Modifier
-                .fillMaxSize()
-                .gradientBackground2()
-                .alpha(0.1f)
-        ) {}
 
         Column(
             Modifier
@@ -79,7 +71,12 @@ fun SignInScreen(navigate: (String) -> Unit = {}) {
                     }
                 )
 
+                Spacer(modifier = Modifier.height(16.dp))
+
                 ClickableLoginTextComponent(navigate = navigate, route = Route.SignUpScreen.route," Hesap oluştur ","Hesabın yoksa ",)
+
+                Spacer(modifier = Modifier.height(16.dp))
+
                 ClickableLoginTextComponent(navigate = navigate, route = Route.DashboardScreen.route," Geri dön ","",)
 
             }
