@@ -1,5 +1,7 @@
 package com.example.gorgullebelle.app.data
 
+import com.example.gorgullebelle.app.data.dataclass.Message
+
 val commonConversationPrompts = listOf(
     Message("system", "You are participating in a game. You must strictly adhere to the rules provided. Failure to comply with the rules is not an option."),
     Message("system", "Rules for you:"),
