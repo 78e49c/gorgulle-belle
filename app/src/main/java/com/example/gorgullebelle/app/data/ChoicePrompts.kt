@@ -1,5 +1,7 @@
 package com.example.gorgullebelle.app.data
 
+import com.example.gorgullebelle.app.data.dataclass.Message
+
 val formatPrompt = listOf(
     Message("system", "The response format must include and only include the following: 4 parts: 1 explanation, 1 mainText, 4 answers, and 4 scores. " +
             "The response must be exactly in the following format:"),
