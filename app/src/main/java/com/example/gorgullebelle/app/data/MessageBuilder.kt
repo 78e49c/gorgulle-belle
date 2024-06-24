@@ -1,5 +1,7 @@
 package com.example.gorgullebelle.app.data
 
+import com.example.gorgullebelle.app.data.dataclass.Message
+
 object MessageBuilder {
     fun buildMessageHistory(
         previousMessages: List<Message>,
