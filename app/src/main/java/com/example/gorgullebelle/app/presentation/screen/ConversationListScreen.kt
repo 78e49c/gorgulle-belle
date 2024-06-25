@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.gorgullebelle.R
 import com.example.gorgullebelle.app.presentation.components.ConversationListItem
-import com.example.gorgullebelle.app.presentation.components.CustomTopAppBar2
+import com.example.gorgullebelle.app.presentation.components.CustomTopAppBar
 import com.example.gorgullebelle.app.presentation.navigation.Route
 import com.example.gorgullebelle.app.presentation.viewmodel.ChatManagerViewModel
 
@@ -25,9 +25,9 @@ fun ConversationListScreen(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            CustomTopAppBar2(
-                title = "Konuşma",
-                onIconClick = { navigate(Route.DashboardScreen.route) }
+            CustomTopAppBar(
+                conversationTitle  = "Konuşma",
+                onBackPressed = { navigate(Route.DashboardScreen.route) }
             )
         }
     ) { innerPadding ->
