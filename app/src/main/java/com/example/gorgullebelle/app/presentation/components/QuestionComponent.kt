@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -27,9 +29,11 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonDefaults
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -40,13 +44,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.gorgullebelle.R
 import com.example.gorgullebelle.app.presentation.screen.ExerciseItem
+import com.example.gorgullebelle.app.presentation.viewmodel.ProfileViewModel
 
 @Composable
 fun QuestionComponent(
@@ -58,6 +66,8 @@ fun QuestionComponent(
 ) {
     var selectedChoice by remember(key) { mutableStateOf<Int?>(null) }
     var isSubmitted by remember(key) { mutableStateOf(false) }
+
+    val submit = stringResource(R.string.submit)
 
     Column(
         modifier = Modifier
@@ -107,7 +117,7 @@ fun QuestionComponent(
         }
 
         QuestionButtonComponent(
-            value ="Submit",
+            value = submit,
             onClick = {
                 if (isSubmitted) {
                     onSubmit(null, true)  // Already submitted message
@@ -134,7 +144,6 @@ fun QuestionButtonComponent(value: String, onClick: () -> Unit) {
     Button(
         onClick = onClick,
         modifier = Modifier
-            //.width(200.dp)
             .heightIn(48.dp),
         contentPadding = PaddingValues(),
         colors = ButtonDefaults.buttonColors(Color.Transparent)
@@ -150,7 +159,6 @@ fun QuestionButtonComponent(value: String, onClick: () -> Unit) {
                             colorResource(id = R.color.black)
                         )
                     ),
-                    //shape = RoundedCornerShape(50.dp)
                 ),
             contentAlignment = Alignment.Center
         ) {
@@ -266,6 +274,73 @@ fun QuestionCardItem(
         }
     }
 }
+
+
+@Composable
+fun TopicSelectionDialog(
+    profileViewModel: ProfileViewModel = viewModel(),
+    onDismissRequest: () -> Unit,
+    onTopicSelected: (String) -> Unit
+) {
+    val topics by profileViewModel.topics.observeAsState(emptyList())
+    var selectedTopic by remember { mutableStateOf<String?>(null) }
+
+    Dialog(onDismissRequest = onDismissRequest) {
+        Surface(
+            shape = MaterialTheme.shapes.medium,
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .height(300.dp)
+                    .padding(16.dp)
+            ) {
+                Text(
+                    text = "Bir Konu Seçin",
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
+                LazyColumn(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    items(topics) { topic ->
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 8.dp)
+                                .clickable { selectedTopic = topic }
+                        ) {
+                            RadioButton(
+                                selected = selectedTopic == topic,
+                                onClick = { selectedTopic = topic }
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(text = topic)
+                        }
+                    }
+                }
+                Row(
+                    horizontalArrangement = Arrangement.End,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp)
+                ) {
+                    Button(
+                        onClick = {
+                            selectedTopic?.let { onTopicSelected(it) }
+                            onDismissRequest()
+                        },
+                        enabled = selectedTopic != null
+                    ) {
+                        Text("Seç")
+                    }
+                }
+            }
+        }
+    }
+}
+
 
 
 @Preview(showBackground = true)
