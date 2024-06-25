@@ -13,17 +13,27 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FractionalThreshold
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.rememberSwipeableState
 import androidx.compose.material.swipeable
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,7 +48,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.gorgullebelle.R
 import com.example.gorgullebelle.app.presentation.components.ClickableLoginTextComponent
-import com.example.gorgullebelle.app.presentation.components.CustomTopAppBar
 import com.example.gorgullebelle.app.presentation.components.ProfileRow
 import com.example.gorgullebelle.app.presentation.navigation.Route
 import com.example.gorgullebelle.app.presentation.viewmodel.ProfileViewModel
@@ -54,6 +63,7 @@ fun ProfileScreen(
     val swipeableState = rememberSwipeableState(initialValue = 0)
     val scope = rememberCoroutineScope()
     val anchors = mapOf(0f to 0, -300f to 1) // Adjust the swipe distance as needed
+    val expanded = remember { mutableStateOf(false) }
 
     Surface(modifier = Modifier
         .fillMaxSize()
@@ -67,9 +77,30 @@ fun ProfileScreen(
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             topBar = {
-                CustomTopAppBar(
-                    title = "Kimlik",
-                    onIconClick = { navigate(Route.DashboardScreen.route) }
+                TopAppBar(
+                    title = { Text("Kimlik") },
+                    navigationIcon = {
+                        IconButton(onClick = { navigate(Route.DashboardScreen.route) }) {
+                            Icon(Icons.Default.ArrowBack, contentDescription = "Geri Dön")
+                        }
+                    },
+                    actions = {
+                        IconButton(onClick = { expanded.value = !expanded.value }) {
+                            Icon(Icons.Default.MoreVert, contentDescription = "Menu")
+                        }
+                        DropdownMenu(
+                            expanded = expanded.value,
+                            onDismissRequest = { expanded.value = false }
+                        ) {
+                            DropdownMenuItem(
+                                text = { Text("Konuları Düzenle") },
+                                onClick = {
+                                    navigate(Route.AddTopicScreen.route)
+                                    expanded.value = false
+                                }
+                            )
+                        }
+                    }
                 )
             }
         ) { values ->
