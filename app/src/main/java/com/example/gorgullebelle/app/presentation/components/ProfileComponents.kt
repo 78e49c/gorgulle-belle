@@ -260,7 +260,7 @@ fun PasswordTextField(labelValue: String, painterResource: Painter) {
             }
 
 
-            var description = if(passwordVisible.value){
+            val description = if(passwordVisible.value){
                 stringResource(id = R.string.hide_password)
             } else {
                 stringResource(id = R.string.show_password)
