@@ -1,6 +1,5 @@
 package com.example.gorgullebelle.app.presentation.screen
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -29,21 +28,25 @@ import com.example.gorgullebelle.app.data.dataclass.CarouselItem
 import com.example.gorgullebelle.app.presentation.components.BottomNavigationBar
 import com.example.gorgullebelle.app.presentation.components.MultiCarousel
 import com.example.gorgullebelle.app.presentation.navigation.Route
+import com.example.gorgullebelle.app.presentation.viewmodel.ChatManagerViewModel
+import com.example.gorgullebelle.app.presentation.viewmodel.QuestionViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DashboardScreen(navigate: (String) -> Unit = {}) {
-    //val scaffoldState = rememberScaffoldState()
+fun DashboardScreen(
+    chatManagerViewModel: ChatManagerViewModel,
+    questionViewModel: QuestionViewModel,
+    navigate: (String) -> Unit = {}
+) {
     var selectedItem by remember { mutableStateOf(0) }
 
     val items = listOf(
         BottomNavItem("Kimlik", ImageVector.vectorResource(id = R.drawable.sharp_person_24), selectedItem == 0),
-        BottomNavItem("Konuşma", Icons.Filled.Email , selectedItem == 1),
+        BottomNavItem("Konuşma", Icons.Filled.Email, selectedItem == 1),
         BottomNavItem("Seçim", Icons.Filled.CheckCircle, selectedItem == 2)
     )
 
     Scaffold(
-       // scaffoldState = scaffoldState,
         bottomBar = {
             BottomNavigationBar(
                 items = items,
@@ -52,7 +55,7 @@ fun DashboardScreen(navigate: (String) -> Unit = {}) {
                     when (item.label) {
                         "Kimlik" -> navigate(Route.ProfileScreen.route)
                         "Konuşma" -> navigate(Route.ConversationListScreen.route)
-                        "Seçim" -> navigate(Route.ExerciseListScreen.route)
+                        "Seçim" -> navigate(Route.QuestionListScreen.route)
                     }
                 }
             )
@@ -62,15 +65,12 @@ fun DashboardScreen(navigate: (String) -> Unit = {}) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-
         ) {
-
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(colorResource(id = R.color.dashboard_background_color))
             ) {
-
                 Spacer(modifier = Modifier.height(20.dp))
 
                 val itemsCarousel1 = listOf(
@@ -131,21 +131,45 @@ fun DashboardScreen(navigate: (String) -> Unit = {}) {
                     onTitleClick = { title ->
                         when (title) {
                             "Konuşmalar" -> {
-                                Log.d("Carousel", "Carousel 1 title clicked")
                                 navigate(Route.ConversationListScreen.route)
                             }
                             "Seçimler" -> {
-                                Log.d("Carousel", "Carousel 2 title clicked")
-                                navigate(Route.ExerciseListScreen.route)
+                                navigate(Route.QuestionListScreen.route)
                             }
                         }
                     },
                     onButtonClick = { itemId ->
-                        Log.d("Carousel", "Button in item $itemId clicked")
-
+                        when (itemId) {
+                            1 -> {
+                                chatManagerViewModel.setSelectedPackageIndex(0)
+                                navigate(Route.ConversationScreen.route)
+                            }
+                            2 -> {
+                                chatManagerViewModel.setSelectedPackageIndex(1)
+                                navigate(Route.ConversationScreen.route)
+                            }
+                            3 -> {
+                                chatManagerViewModel.setSelectedPackageIndex(2)
+                                navigate(Route.ConversationScreen.route)
+                            }
+                            4 -> {
+                                questionViewModel.setConcept("konuTespiti")
+                                navigate(Route.QuestionScreen.route)
+                            }
+                            5 -> {
+                                questionViewModel.setConcept("gereklilikTespiti")
+                                navigate(Route.QuestionScreen.route)
+                            }
+                            6 -> {
+                                questionViewModel.setConcept("uygunEylem")
+                                navigate(Route.QuestionScreen.route)
+                            }
+                        }
                     }
                 )
             }
         }
     }
 }
+
+
