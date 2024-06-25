@@ -39,8 +39,10 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.gorgullebelle.R
 import com.example.gorgullebelle.app.data.dataclass.BottomNavItem
 import com.example.gorgullebelle.app.data.dataclass.CarouselItem
@@ -48,7 +50,7 @@ import com.example.gorgullebelle.app.data.dataclass.CarouselItem
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CustomTopAppBar(
+fun CustomTopAppBar2(
     title: String,
     onIconClick: () -> Unit
 ) {
@@ -81,6 +83,54 @@ fun CustomTopAppBar(
          */
     )
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CustomTopAppBar(
+    conversationTitle: String,
+    onBackPressed: () -> Unit,
+    menuContent: @Composable (() -> Unit)? = null
+) {
+    TopAppBar(
+        title = {
+            ConstraintLayout(modifier = Modifier.fillMaxWidth()) {
+                val (titleRef, menuRef) = createRefs()
+
+                Text(
+                    text = conversationTitle,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .constrainAs(titleRef) {
+                            start.linkTo(parent.start)
+                            if (menuContent != null) {
+                                end.linkTo(menuRef.start)
+                            } else {
+                                end.linkTo(parent.end)
+                            }
+                            width = androidx.constraintlayout.compose.Dimension.fillToConstraints
+                        }
+                )
+
+                if (menuContent != null) {
+                    Box(
+                        modifier = Modifier
+                            .constrainAs(menuRef) {
+                                end.linkTo(parent.end)
+                            }
+                    ) {
+                        menuContent()
+                    }
+                }
+            }
+        },
+        navigationIcon = {
+            IconButton(onClick = { onBackPressed() }) {
+                Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+            }
+        }
+    )
+}
+
 
 
 
