@@ -1,6 +1,5 @@
 package com.example.gorgullebelle.app.presentation.components
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -47,7 +46,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.example.gorgullebelle.R
-import com.example.gorgullebelle.app.presentation.navigation.Route
 import com.example.gorgullebelle.app.presentation.viewmodel.ChatManagerViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -59,17 +57,16 @@ fun ConversationListItem(
     imageResId: Int,
     sessionId: Int,
     chatManagerViewModel: ChatManagerViewModel,
-    navigate: (String) -> Unit
+    onItemClick: (Int) -> Unit // Pass the sessionId when clicked
 ) {
     val messagesFlow = chatManagerViewModel.getSessionMessages(sessionId).collectAsState()
     val lastMessage = messagesFlow.value.lastOrNull()?.removePrefix("user: ")?.removePrefix("assistant: ")?.removePrefix("system: ")
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
-                Log.d("ConversationListItem", "Clicked: $sessionId")
-                chatManagerViewModel.setSelectedPackageIndex(sessionId)
-                navigate(Route.ExperienceScreen.route)
+                onItemClick(sessionId) // Invoke the click handler with sessionId
             }
             .padding(8.dp),
         horizontalArrangement = Arrangement.Start
@@ -90,6 +87,7 @@ fun ConversationListItem(
         }
     }
 }
+
 
 
 @Composable
