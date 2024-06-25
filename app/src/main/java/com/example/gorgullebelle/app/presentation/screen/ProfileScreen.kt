@@ -14,7 +14,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FractionalThreshold
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.rememberSwipeableState
 import androidx.compose.material.swipeable
@@ -27,7 +26,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -48,6 +46,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.gorgullebelle.R
 import com.example.gorgullebelle.app.presentation.components.ClickableLoginTextComponent
+import com.example.gorgullebelle.app.presentation.components.CustomTopAppBar
 import com.example.gorgullebelle.app.presentation.components.ProfileRow
 import com.example.gorgullebelle.app.presentation.navigation.Route
 import com.example.gorgullebelle.app.presentation.viewmodel.ProfileViewModel
@@ -77,14 +76,10 @@ fun ProfileScreen(
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             topBar = {
-                TopAppBar(
-                    title = { Text("Kimlik") },
-                    navigationIcon = {
-                        IconButton(onClick = { navigate(Route.DashboardScreen.route) }) {
-                            Icon(Icons.Default.ArrowBack, contentDescription = "Geri Dön")
-                        }
-                    },
-                    actions = {
+                CustomTopAppBar(
+                    conversationTitle = "Kimlik",
+                    onBackPressed = { navigate(Route.DashboardScreen.route) },
+                    menuContent = {
                         IconButton(onClick = { expanded.value = !expanded.value }) {
                             Icon(Icons.Default.MoreVert, contentDescription = "Menu")
                         }
@@ -99,11 +94,25 @@ fun ProfileScreen(
                                     expanded.value = false
                                 }
                             )
+                            DropdownMenuItem(
+                                text = { Text("Sistem Mesajlarını Göster") },
+                                onClick = {
+                                    profileViewModel.setSystemMessageVisible(true)
+                                    expanded.value = false
+                                }
+                            )
+                            DropdownMenuItem(
+                                text = { Text("Sistem Mesajlarını Gizle") },
+                                onClick = {
+                                    profileViewModel.setSystemMessageVisible(false)
+                                    expanded.value = false
+                                }
+                            )
                         }
                     }
                 )
             }
-        ) { values ->
+        ){ values ->
             Box {
                 Column(
                     modifier = Modifier
