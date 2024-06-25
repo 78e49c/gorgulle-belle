@@ -171,44 +171,41 @@ fun AssistantMessageBubble(message: String, timestamp: String) {
 }
 
 @Composable
-fun SystemMessageBubble(message: String, timestamp: String) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(4.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Card(
+fun SystemMessageBubble(message: String, timestamp: String, isVisible: Boolean) {
+    if (isVisible) {
+        Box(
             modifier = Modifier
-                .widthIn(max = 250.dp)
-            ,elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
-
+                .fillMaxWidth()
+                .padding(4.dp),
+            contentAlignment = Alignment.Center
         ) {
-
-            Column (
-                Modifier
-                    .clip(RoundedCornerShape(8.dp))
-                    //.fillMaxSize()
-                    .background(colorResource(id = R.color.system_color))
-                    .padding(8.dp)
+            Card(
+                modifier = Modifier
+                    .widthIn(max = 250.dp),
+                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
             ) {
-
-                Text(
-                    text = message,
-                    color = Color.White
-                )
-                Text(
-                    text = timestamp,
-                    fontSize = 10.sp,
-                    color = Color.LightGray,
-                    modifier = Modifier.align(Alignment.End)
-                )
+                Column(
+                    Modifier
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(colorResource(id = R.color.system_color))
+                        .padding(8.dp)
+                ) {
+                    Text(
+                        text = message,
+                        color = Color.White
+                    )
+                    Text(
+                        text = timestamp,
+                        fontSize = 10.sp,
+                        color = Color.LightGray,
+                        modifier = Modifier.align(Alignment.End)
+                    )
+                }
             }
-
-
         }
     }
 }
+
 
 
 @OptIn(ExperimentalMaterial3Api::class)
