@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import com.example.gorgullebelle.app.data.ApiRepository
 import com.example.gorgullebelle.app.data.dataclass.Choice
 import com.example.gorgullebelle.app.data.dataclass.Question
-import com.example.gorgullebelle.app.data.questionPrompts
+import com.example.gorgullebelle.app.data.getQuestionPrompts
 
 class QuestionViewModel : ViewModel() {
     private val _concept = MutableLiveData<String>()
@@ -39,7 +39,7 @@ class QuestionViewModel : ViewModel() {
             }
         }
 
-        val promptMessages = questionPrompts[promptIndex]
+        val promptMessages = getQuestionPrompts(promptIndex)
         Log.d("ExerciseViewModel", "Sending message to API")
 
         apiRepository.sendMessage(context, 1, promptMessages) { response ->
