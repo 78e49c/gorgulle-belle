@@ -10,11 +10,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -31,11 +29,8 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -50,42 +45,6 @@ import com.example.gorgullebelle.app.data.dataclass.CarouselItem
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CustomTopAppBar2(
-    title: String,
-    onIconClick: () -> Unit
-) {
-    TopAppBar(
-        title = {
-            Box(modifier = Modifier.fillMaxSize()) {
-                IconButton(
-                    onClick = onIconClick,
-                    modifier = Modifier.align(Alignment.CenterStart)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.ArrowBack,
-                        contentDescription = "Back",
-                        tint = Color.Black
-                    )
-                }
-
-                Text(
-                    text = title,
-                    color = Color.Black,
-                    modifier = Modifier.align(Alignment.Center)
-                )
-            }
-        },
-        /*
-        backgroundColor = Color.Blue,
-        contentColor = Color.Black,
-        elevation = 4.dp
-
-         */
-    )
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
 fun CustomTopAppBar(
     conversationTitle: String,
     onBackPressed: () -> Unit,
@@ -94,47 +53,47 @@ fun CustomTopAppBar(
     TopAppBar(
         title = {
             ConstraintLayout(modifier = Modifier.fillMaxWidth()) {
-                val (titleRef, menuRef) = createRefs()
+                val (titleRef, startButtonRef, endButtonRef) = createRefs()
 
                 Text(
                     text = conversationTitle,
                     textAlign = TextAlign.Center,
                     modifier = Modifier
                         .constrainAs(titleRef) {
-                            start.linkTo(parent.start)
-                            if (menuContent != null) {
-                                end.linkTo(menuRef.start)
-                            } else {
-                                end.linkTo(parent.end)
-                            }
-                            width = androidx.constraintlayout.compose.Dimension.fillToConstraints
+                            top.linkTo(parent.top)
+                            bottom.linkTo(parent.bottom)
+                            centerHorizontallyTo(parent)
                         }
+                        .padding(start = 16.dp, end = 16.dp)
+                        //.align(Alignment.CenterVertically)
                 )
 
-                if (menuContent != null) {
+                IconButton(
+                    onClick = { onBackPressed() },
+                    modifier = Modifier.constrainAs(startButtonRef) {
+                        start.linkTo(parent.start)
+                        top.linkTo(parent.top)
+                        bottom.linkTo(parent.bottom)
+                    }
+                ) {
+                    Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                }
+
+                menuContent?.let {
                     Box(
-                        modifier = Modifier
-                            .constrainAs(menuRef) {
-                                end.linkTo(parent.end)
-                            }
+                        modifier = Modifier.constrainAs(endButtonRef) {
+                            end.linkTo(parent.end)
+                            top.linkTo(parent.top)
+                            bottom.linkTo(parent.bottom)
+                        }
                     ) {
-                        menuContent()
+                        it()
                     }
                 }
-            }
-        },
-        navigationIcon = {
-            IconButton(onClick = { onBackPressed() }) {
-                Icon(Icons.Default.ArrowBack, contentDescription = "Back")
             }
         }
     )
 }
-
-
-
-
-
 
 
 
@@ -270,29 +229,6 @@ fun MultiCarousel(
         }
     }
 }
-
-
-
-
-
-
-@Composable
-fun IconComponent(
-    onClick: () -> Unit,
-    painterResource: Painter
-) {
-    Image(
-        painter = painterResource,
-        contentDescription = null,
-        modifier = Modifier
-            .size(48.dp)
-            .clickable { onClick() }
-    )
-}
-
-
-
-
 
 
 
