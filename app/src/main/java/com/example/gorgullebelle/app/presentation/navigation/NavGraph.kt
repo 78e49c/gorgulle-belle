@@ -4,11 +4,12 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.gorgullebelle.app.presentation.screen.AddTopicScreen
 import com.example.gorgullebelle.app.presentation.screen.ConversationListScreen
 import com.example.gorgullebelle.app.presentation.screen.ConversationScreen
 import com.example.gorgullebelle.app.presentation.screen.DashboardScreen
-import com.example.gorgullebelle.app.presentation.screen.ProfileScreen
 import com.example.gorgullebelle.app.presentation.screen.QuestionListScreen
+import com.example.gorgullebelle.app.presentation.screen.ProfileScreen
 import com.example.gorgullebelle.app.presentation.screen.QuestionScreen
 import com.example.gorgullebelle.app.presentation.screen.SignInScreen
 import com.example.gorgullebelle.app.presentation.screen.SignUpScreen
@@ -38,6 +39,8 @@ fun NavGraph(
 
         composable(Route.DashboardScreen.route) {
             DashboardScreen(
+                chatManagerViewModel = chatManagerViewModel,
+                questionViewModel = questionViewModel,
                 navigate = { route ->
                     navController.navigate(route)
                 }
@@ -52,7 +55,7 @@ fun NavGraph(
             )
         }
 
-        composable(Route.ExperienceScreen.route) {
+        composable(Route.ConversationScreen.route) {
             ConversationScreen(
                 chatManagerViewModel = chatManagerViewModel,
                 profileViewModel = profileViewModel,
@@ -64,39 +67,51 @@ fun NavGraph(
 
         composable(Route.ConversationListScreen.route) {
             ConversationListScreen(
+                chatManagerViewModel = chatManagerViewModel,
                 navigate = { route ->
                     navController.navigate(route)
-                },
-                chatManagerViewModel = chatManagerViewModel
+                }
+
             )
         }
 
         composable(Route.ProfileScreen.route) {
             ProfileScreen(
+                profileViewModel = profileViewModel,  // ProfileViewModel'i buradan geçiyoruz
                 navigate = { route ->
                     navController.navigate(route)
-                },
-                profileViewModel = profileViewModel  // ProfileViewModel'i buradan geçiyoruz
+                }
             )
         }
 
-        composable(Route.ExerciseScreen.route) {
+        composable(Route.QuestionScreen.route) {
             QuestionScreen(
+                questionViewModel = questionViewModel,
+                profileViewModel = profileViewModel,
                 navigate = { route ->
                     navController.navigate(route)
                 },
-                questionViewModel = questionViewModel,
-                profileViewModel = profileViewModel
             )
         }
 
-        composable(Route.ExerciseListScreen.route) {
+        composable(Route.QuestionListScreen.route) {
             QuestionListScreen(
+                questionViewModel = questionViewModel,
                 navigate = { route ->
                     navController.navigate(route)
                 },
-                questionViewModel = questionViewModel
             )
         }
+
+        composable(Route.AddTopicScreen.route) {
+            AddTopicScreen(
+                profileViewModel = profileViewModel,
+                navigate = { route ->
+                    navController.navigate(route)
+                }
+            )
+        }
+
+
     }
 }
