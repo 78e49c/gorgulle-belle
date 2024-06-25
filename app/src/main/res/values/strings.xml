@@ -14,6 +14,15 @@
     <string name="register">Kaydol</string>
     <string name="login">Giriş yap</string>
     <string name="out">Çıkış yap</string>
-    <string name="refresh_button">Refresh</string>
+
+    <string name="question_error">Bazen böyle oluyor yeni soruya geç</string>
+    <string name="question_loading">Soru uyduruluyor</string>
+
+
+    <string name="question_select">Seçmedin.</string>
+    <string name="question_already_submitted">Zaten bir cevap verdin.</string>
+    <string name="question_points">puan geldi</string>
+
+    <string name="submit">Gönder</string>
 
 </resources>
