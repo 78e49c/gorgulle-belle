@@ -12,17 +12,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.gorgullebelle.R
 import com.example.gorgullebelle.app.presentation.components.ConversationListItem
-import com.example.gorgullebelle.app.presentation.components.CustomTopAppBar
+import com.example.gorgullebelle.app.presentation.components.CustomTopAppBar2
 import com.example.gorgullebelle.app.presentation.navigation.Route
 import com.example.gorgullebelle.app.presentation.viewmodel.ChatManagerViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ConversationListScreen(navigate: (String) -> Unit = {}, chatManagerViewModel: ChatManagerViewModel) {
+fun ConversationListScreen(
+    navigate: (String) -> Unit = {},
+    chatManagerViewModel: ChatManagerViewModel
+) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            CustomTopAppBar(
+            CustomTopAppBar2(
                 title = "Konuşma",
                 onIconClick = { navigate(Route.DashboardScreen.route) }
             )
@@ -33,20 +36,24 @@ fun ConversationListScreen(navigate: (String) -> Unit = {}, chatManagerViewModel
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-
             Column {
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(8.dp)
                 ) {
+                    val onItemClick: (Int) -> Unit = { sessionId ->
+                        chatManagerViewModel.setSelectedPackageIndex(sessionId)
+                        navigate(Route.ConversationScreen.route)
+                    }
+
                     item {
                         ConversationListItem(
                             title = "AI Dedektifi",
                             imageResId = R.drawable.ai_dedektifi,
                             sessionId = 0,
                             chatManagerViewModel = chatManagerViewModel,
-                            navigate = navigate
+                            onItemClick = onItemClick
                         )
                     }
                     item {
@@ -55,7 +62,7 @@ fun ConversationListScreen(navigate: (String) -> Unit = {}, chatManagerViewModel
                             imageResId = R.drawable.gonul_hasbihali,
                             sessionId = 1,
                             chatManagerViewModel = chatManagerViewModel,
-                            navigate = navigate
+                            onItemClick = onItemClick
                         )
                     }
                     item {
@@ -64,7 +71,7 @@ fun ConversationListScreen(navigate: (String) -> Unit = {}, chatManagerViewModel
                             imageResId = R.drawable.sam_yolculugu,
                             sessionId = 2,
                             chatManagerViewModel = chatManagerViewModel,
-                            navigate = navigate
+                            onItemClick = onItemClick
                         )
                     }
                 }
