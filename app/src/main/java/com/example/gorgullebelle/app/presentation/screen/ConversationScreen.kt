@@ -10,7 +10,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -20,7 +19,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -31,6 +29,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.gorgullebelle.app.presentation.components.AssistantMessageBubble
+import com.example.gorgullebelle.app.presentation.components.CustomTopAppBar
 import com.example.gorgullebelle.app.presentation.components.MessageInput
 import com.example.gorgullebelle.app.presentation.components.SystemMessageBubble
 import com.example.gorgullebelle.app.presentation.components.UserMessageBubble
@@ -70,14 +69,10 @@ fun ConversationScreen(
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             topBar = {
-                TopAppBar(
-                    title = { Text(conversationTitle) },
-                    navigationIcon = {
-                        IconButton(onClick = { navigate(Route.ConversationListScreen.route) }) {
-                            Icon(Icons.Default.ArrowBack, contentDescription = "Back")
-                        }
-                    },
-                    actions = {
+                CustomTopAppBar(
+                    conversationTitle = conversationTitle,
+                    onBackPressed = { navigate(Route.ConversationListScreen.route) },
+                    menuContent = {
                         IconButton(onClick = { expanded = !expanded }) {
                             Icon(Icons.Default.MoreVert, contentDescription = "Menu")
                         }
@@ -89,7 +84,7 @@ fun ConversationScreen(
                                 text = { Text("Konuşmayı Sil") },
                                 onClick = {
                                     chatManagerViewModel.clearSessionMessages(selectedPackageIndex)
-                                    profileViewModel.updateScore(100)
+                                    profileViewModel.updateScore(50)
                                     expanded = false
                                 }
                             )
