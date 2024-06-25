@@ -12,12 +12,12 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.example.gorgullebelle.R
-import com.example.gorgullebelle.app.presentation.components.CustomTopAppBar
+import com.example.gorgullebelle.app.presentation.components.CustomTopAppBar2
 import com.example.gorgullebelle.app.presentation.components.QuestionItemList
 import com.example.gorgullebelle.app.presentation.navigation.Route
 import com.example.gorgullebelle.app.presentation.viewmodel.QuestionViewModel
 
-data class ExerciseItem(val title: String, val imageResId: Int, val body: String, val concept: String, val route: String)
+data class ExerciseItem(val title: String, val imageResId: Int, val concept: String, val route: String)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -26,9 +26,9 @@ fun QuestionListScreen(
     questionViewModel: QuestionViewModel
 ) {
     val initialExerciseItems = listOf(
-        ExerciseItem("Konu tespiti", R.drawable.konu_tespiti, "0", "konuTespiti", Route.ExerciseScreen.route),
-        ExerciseItem("Gereklilik tespiti", R.drawable.dogru_atama, "0", "gereklilikTespiti", Route.ExerciseScreen.route),
-        ExerciseItem("Uygun eylem", R.drawable.dogru_eylem, "0", "uygunEylem", Route.ExerciseScreen.route)
+        ExerciseItem("Konu tespiti", R.drawable.konu_tespiti,  "konuTespiti", Route.QuestionScreen.route),
+        ExerciseItem("Gereklilik tespiti", R.drawable.dogru_atama, "gereklilikTespiti", Route.QuestionScreen.route),
+        ExerciseItem("Uygun eylem", R.drawable.dogru_eylem, "uygunEylem", Route.QuestionScreen.route)
     )
 
     var exerciseItems by rememberSaveable { mutableStateOf(initialExerciseItems) }
@@ -36,7 +36,7 @@ fun QuestionListScreen(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            CustomTopAppBar(
+            CustomTopAppBar2(
                 title = "Kısıtlı anlama",
                 onIconClick = { navigate(Route.DashboardScreen.route) }
             )
