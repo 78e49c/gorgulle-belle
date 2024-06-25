@@ -12,7 +12,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.example.gorgullebelle.R
-import com.example.gorgullebelle.app.presentation.components.CustomTopAppBar2
+import com.example.gorgullebelle.app.presentation.components.CustomTopAppBar
 import com.example.gorgullebelle.app.presentation.components.QuestionItemList
 import com.example.gorgullebelle.app.presentation.navigation.Route
 import com.example.gorgullebelle.app.presentation.viewmodel.QuestionViewModel
@@ -36,9 +36,9 @@ fun QuestionListScreen(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            CustomTopAppBar2(
-                title = "Kısıtlı anlama",
-                onIconClick = { navigate(Route.DashboardScreen.route) }
+            CustomTopAppBar(
+                conversationTitle = "Kısıtlı anlama",
+                onBackPressed = { navigate(Route.DashboardScreen.route) }
             )
         }
     ) { innerPadding ->
