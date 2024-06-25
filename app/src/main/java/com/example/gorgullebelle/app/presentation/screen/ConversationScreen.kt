@@ -1,7 +1,5 @@
 package com.example.gorgullebelle.app.presentation.screen
 
-
-
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -49,6 +48,7 @@ fun ConversationScreen(
 ) {
     val selectedPackageIndex by chatManagerViewModel.selectedPackageIndex.collectAsState()
     val messagesState by chatManagerViewModel.getSessionMessages(selectedPackageIndex).collectAsState(emptyList())
+    val systemMessageVisible by profileViewModel.systemMessageVisible.observeAsState(false)
     val conversationTitle = when (selectedPackageIndex) {
         0 -> "AI Dedektifi"
         1 -> "Gönül Hasbihali"
@@ -109,7 +109,7 @@ fun ConversationScreen(
                             when {
                                 message.startsWith("user:") -> UserMessageBubble(messageText, timestamp)
                                 message.startsWith("assistant:") -> AssistantMessageBubble(messageText, timestamp)
-                                message.startsWith("system:") -> SystemMessageBubble(messageText, timestamp)
+                                message.startsWith("system:") -> SystemMessageBubble(messageText, timestamp, systemMessageVisible)
                             }
                         }
                     }
