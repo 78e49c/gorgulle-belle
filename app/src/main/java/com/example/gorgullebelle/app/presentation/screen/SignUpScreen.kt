@@ -1,22 +1,26 @@
 package com.example.gorgullebelle.app.presentation.screen
 
-import androidx.compose.foundation.background
+
+//noinspection UsingMaterialAndMaterial3Libraries
+
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.material.Scaffold
+import androidx.compose.material.SnackbarDuration
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -30,6 +34,8 @@ import com.example.gorgullebelle.app.presentation.components.NormalTextComponent
 import com.example.gorgullebelle.app.presentation.components.PasswordTextField
 import com.example.gorgullebelle.app.presentation.navigation.Route
 import com.example.gorgullebelle.app.presentation.viewmodel.UserViewModel
+import kotlinx.coroutines.launch
+import java.util.regex.Pattern
 
 @Composable
 fun SignUpScreen(
@@ -40,78 +46,103 @@ fun SignUpScreen(
     var surname by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    val scaffoldState = rememberScaffoldState()
+    val scope = rememberCoroutineScope()
 
-    Surface(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        Column(
-            Modifier
+    Scaffold(scaffoldState = scaffoldState) {
+        Surface(
+            modifier = Modifier
                 .fillMaxSize()
-                .padding(28.dp)
+                .padding(it)
         ) {
-            NormalTextComponent(value = stringResource(id = R.string.hello))
-            HeadingTextComponent(value = stringResource(id = R.string.sign_up))
+            Column(
+                Modifier
+                    .fillMaxSize()
+                    .padding(28.dp)
+            ) {
+                NormalTextComponent(value = stringResource(id = R.string.hello))
+                HeadingTextComponent(value = stringResource(id = R.string.sign_up))
 
-            Spacer(modifier = Modifier
-                .alpha(0.0f)
-                .height(20.dp))
+                Spacer(modifier = Modifier.height(20.dp))
 
-            Column(Modifier.wrapContentSize(), horizontalAlignment = Alignment.CenterHorizontally) {
-                MyTextField(
-                    labelValue = stringResource(id = R.string.first_name),
-                    painterResource(id = R.drawable.sharp_person_24),
-                    onValueChange = { name = it }
-                )
+                Column(Modifier.wrapContentSize(), horizontalAlignment = Alignment.CenterHorizontally) {
+                    MyTextField(
+                        labelValue = stringResource(id = R.string.first_name),
+                        painterResource(id = R.drawable.sharp_person_24),
+                        onValueChange = { name = it }
+                    )
 
-                Spacer(modifier = Modifier.height(10.dp))
+                    Spacer(modifier = Modifier.height(10.dp))
 
-                MyTextField(
-                    labelValue = stringResource(id = R.string.last_name),
-                    painterResource(id = R.drawable.sharp_person_24),
-                    onValueChange = { surname = it }
-                )
+                    MyTextField(
+                        labelValue = stringResource(id = R.string.last_name),
+                        painterResource(id = R.drawable.sharp_person_24),
+                        onValueChange = { surname = it }
+                    )
 
-                Spacer(modifier = Modifier.height(10.dp).background(Color.Transparent))
+                    Spacer(modifier = Modifier.height(10.dp))
 
-                MyTextField(
-                    labelValue = stringResource(id = R.string.email),
-                    painterResource(id = R.drawable.baseline_email_24),
-                    onValueChange = { email = it }
-                )
+                    MyTextField(
+                        labelValue = stringResource(id = R.string.email),
+                        painterResource(id = R.drawable.baseline_email_24),
+                        onValueChange = { email = it }
+                    )
 
-                Spacer(modifier = Modifier.height(10.dp).background(Color.Transparent))
+                    Spacer(modifier = Modifier.height(10.dp))
 
-                PasswordTextField(
-                    labelValue = stringResource(id = R.string.password),
-                    painterResource(id = R.drawable.baseline_key_24),
-                    onValueChange = { password = it }
-                )
+                    PasswordTextField(
+                        labelValue = stringResource(id = R.string.password),
+                        painterResource(id = R.drawable.baseline_key_24),
+                        onValueChange = { password = it }
+                    )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
 
-                CheckboxCompoment(value = stringResource(id = R.string.policy))
+                    CheckboxCompoment(value = stringResource(id = R.string.policy))
 
-                Spacer(modifier = Modifier.weight(1f))
+                    Spacer(modifier = Modifier.weight(1f))
 
-                ButtonComponent(
-                    value = stringResource(id = R.string.register),
-                    onClick = {
-                        userViewModel.signUp(name, surname, email, password)
-                        navigate.invoke(Route.SignInScreen.route)
-                    }
-                )
+                    ButtonComponent(
+                        value = stringResource(id = R.string.register),
+                        onClick = {
+                            val message = validateSignUp(
+                                name = name,
+                                surname = surname,
+                                email = email,
+                                password = password,
+                                userViewModel = userViewModel
+                            )
+                            scope.launch {
+                                scaffoldState.snackbarHostState.showSnackbar(message, duration = SnackbarDuration.Short)
+                            }
+                            if (message == "Kayıt oldunuz") {
+                                userViewModel.signUp(name, surname, email, password)
+                                navigate(Route.SignInScreen.route)
+                            }
+                        }
+                    )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
 
-                ClickableLoginTextComponent(navigate = navigate, route = Route.SignInScreen.route, "Giriş yap ", "Hesabın varsa ")
+                    ClickableLoginTextComponent(navigate = navigate, route = Route.SignInScreen.route, "Giriş yap ", "Hesabın varsa ")
 
-                Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
 
-                ClickableLoginTextComponent(navigate = navigate, route = Route.DashboardScreen.route, "Geri dön ", "",)
+                    ClickableLoginTextComponent(navigate = navigate, route = Route.DashboardScreen.route, "Geri dön ", "",)
+                }
             }
         }
     }
 }
 
+fun validateSignUp(name: String, surname: String, email: String, password: String, userViewModel: UserViewModel): String {
+    val emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"
+    return when {
+        name.isEmpty() || surname.isEmpty() || email.isEmpty() || password.isEmpty() -> "Boş alanları doldur"
+        !Pattern.matches(emailPattern, email) -> "Geçerli bir email gir"
+        password.length < 8 -> "Geçerli bir şifre gir"
+        userViewModel.emails.contains(email) -> "Zaten kayıtlısınız"
+        else -> "Kayıt oldunuz"
+    }
+}
 
