@@ -119,47 +119,6 @@ fun HeadingTextComponent(value: String) {
 
 
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun MyTextField(labelValue: String, painterResource: Painter) {
-
-    val textValue = remember {
-        mutableStateOf("")
-    }
-
-    OutlinedTextField(
-        modifier = Modifier
-            .fillMaxWidth()
-        //.clip(RoundedCornerShape(8.dp))
-        //.background(colorResource(id = R.color.over_transparent_background))
-        ,
-
-        label = {
-            Text(
-                text = labelValue,
-                modifier = Modifier
-                //.background(colorResource(id = R.color.transparent_background))
-            )
-        },
-
-
-        colors = TextFieldDefaults.tfc1()
-        ,
-        singleLine = true,
-
-
-        keyboardOptions = KeyboardOptions.Default,
-        value = textValue.value,
-        onValueChange = {
-            textValue.value = it
-        },
-        leadingIcon = {
-            Icon(painter = painterResource, contentDescription = "")
-        }
-    )
-
-}
-
 
 
 
@@ -215,68 +174,78 @@ fun TextFieldDefaults.tfc2(): TextFieldColors = this
 
 
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PasswordTextField(labelValue: String, painterResource: Painter) {
-
-    val password = remember {
-        mutableStateOf("")
-    }
-
-    val passwordVisible = remember {
-        mutableStateOf(false)
-    }
+fun MyTextField(labelValue: String, painterResource: Painter, onValueChange: (String) -> Unit) {
+    val textValue = remember { mutableStateOf("") }
 
     OutlinedTextField(
         modifier = Modifier
             .fillMaxWidth()
-            //.clip(RoundedCornerShape(8.dp))
+        ,
+        label = {
+            Text(text = labelValue)
+        },
+        colors = TextFieldDefaults.outlinedTextFieldColors(),
+        singleLine = true,
+        keyboardOptions = KeyboardOptions.Default,
+        value = textValue.value,
+        onValueChange = {
+            textValue.value = it
+            onValueChange(it)
+        },
+        leadingIcon = {
+            Icon(painter = painterResource, contentDescription = "")
+        }
+    )
+}
+
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun PasswordTextField(labelValue: String, painterResource: Painter, onValueChange: (String) -> Unit) {
+    val password = remember { mutableStateOf("") }
+    val passwordVisible = remember { mutableStateOf(false) }
+
+    OutlinedTextField(
+        modifier = Modifier
+            .fillMaxWidth()
             .background(colorResource(id = R.color.half_transparent_background))
         ,
-
         label = { Text(text = labelValue) },
-
-        colors = TextFieldDefaults.tfc1()
-
-        ,
+        colors = TextFieldDefaults.outlinedTextFieldColors(),
         singleLine = true,
-
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password ),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
         value = password.value,
         onValueChange = {
             password.value = it
+            onValueChange(it)
         },
         leadingIcon = {
-            Icon(painter = painterResource,contentDescription = "")
+            Icon(painter = painterResource, contentDescription = "")
         },
-
         trailingIcon = {
             val iconImage = if (passwordVisible.value) {
                 painterResource(id = R.drawable.visibility_24px)
-
             } else {
                 painterResource(id = R.drawable.visibility_off_24px)
             }
 
-
-            val description = if(passwordVisible.value){
+            val description = if (passwordVisible.value) {
                 stringResource(id = R.string.hide_password)
             } else {
                 stringResource(id = R.string.show_password)
             }
 
-            IconButton(onClick = {passwordVisible.value = !passwordVisible.value})
-            {
-                Icon(painter = iconImage,contentDescription = description)
+            IconButton(onClick = { passwordVisible.value = !passwordVisible.value }) {
+                Icon(painter = iconImage, contentDescription = description)
             }
-
         },
-        visualTransformation = if(passwordVisible.value) VisualTransformation.None
-        else PasswordVisualTransformation()
+        visualTransformation = if (passwordVisible.value) VisualTransformation.None else PasswordVisualTransformation()
     )
-
 }
+
 
 @Composable
 fun CheckboxCompoment(value: String){
