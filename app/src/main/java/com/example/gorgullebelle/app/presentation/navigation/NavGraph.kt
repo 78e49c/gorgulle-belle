@@ -8,8 +8,8 @@ import com.example.gorgullebelle.app.presentation.screen.AddTopicScreen
 import com.example.gorgullebelle.app.presentation.screen.ConversationListScreen
 import com.example.gorgullebelle.app.presentation.screen.ConversationScreen
 import com.example.gorgullebelle.app.presentation.screen.DashboardScreen
-import com.example.gorgullebelle.app.presentation.screen.QuestionListScreen
 import com.example.gorgullebelle.app.presentation.screen.ProfileScreen
+import com.example.gorgullebelle.app.presentation.screen.QuestionListScreen
 import com.example.gorgullebelle.app.presentation.screen.QuestionScreen
 import com.example.gorgullebelle.app.presentation.screen.SignInScreen
 import com.example.gorgullebelle.app.presentation.screen.SignUpScreen
@@ -67,6 +67,7 @@ fun NavGraph(
 
         composable(Route.ConversationListScreen.route) {
             ConversationListScreen(
+                profileViewModel = profileViewModel,
                 chatManagerViewModel = chatManagerViewModel,
                 navigate = { route ->
                     navController.navigate(route)
@@ -97,6 +98,7 @@ fun NavGraph(
         composable(Route.QuestionListScreen.route) {
             QuestionListScreen(
                 questionViewModel = questionViewModel,
+                profileViewModel = profileViewModel,
                 navigate = { route ->
                     navController.navigate(route)
                 },
