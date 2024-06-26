@@ -38,7 +38,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.gorgullebelle.R
 import com.example.gorgullebelle.app.data.dataclass.Question
-import com.example.gorgullebelle.app.data.questionTopic
 import com.example.gorgullebelle.app.presentation.components.CustomTopAppBar
 import com.example.gorgullebelle.app.presentation.components.InfoComponent
 import com.example.gorgullebelle.app.presentation.components.QuestionComponent
@@ -150,7 +149,9 @@ fun QuestionScreen(
                     profileViewModel = profileViewModel,
                     onDismissRequest = { showDialog = false },
                     onTopicSelected = { selectedTopic ->
-                        questionTopic = selectedTopic
+
+                        profileViewModel.setSelectedTopicIndex(selectedTopic)
+
                         showDialog = false
                     }
                 )
