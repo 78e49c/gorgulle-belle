@@ -83,6 +83,7 @@ fun NavGraph(
         composable(Route.ProfileScreen.route) {
             ProfileScreen(
                 profileViewModel = profileViewModel,  // ProfileViewModel'i buradan geçiyoruz
+                userViewModel = userViewModel,
                 navigate = { route ->
                     navController.navigate(route)
                 }
