@@ -1,10 +1,13 @@
 package com.example.gorgullebelle.app.presentation.screen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -16,6 +19,9 @@ import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -27,9 +33,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.gorgullebelle.app.presentation.components.CustomTopAppBar
+import com.example.gorgullebelle.app.presentation.components.TopicSelectionDialog
 import com.example.gorgullebelle.app.presentation.navigation.Route
 import com.example.gorgullebelle.app.presentation.viewmodel.ProfileViewModel
 
@@ -42,15 +50,51 @@ fun AddTopicScreen(
     val topics by profileViewModel.topics.observeAsState(emptyList())
     var newTopic by remember { mutableStateOf("") }
 
+    var expanded by remember { mutableStateOf(false) }
+    var showDialog by remember { mutableStateOf(false) }
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             CustomTopAppBar(
                 conversationTitle = "Konuları Düzenle",
-                onBackPressed = { navigate(Route.ProfileScreen.route) }
+                onBackPressed = { navigate(Route.QuestionListScreen.route) },
+                menuContent = {
+                    IconButton(onClick = { expanded = !expanded }) {
+                        Icon(
+                            Icons.Default.MoreVert,
+                            contentDescription = "Menu"
+                        )
+                    }
+                    DropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false }
+                    ) {
+                        DropdownMenuItem(
+                            text = { Text("Konu Seç") },
+                            onClick = {
+                                showDialog = true
+                                expanded = false
+                            }
+                        )
+                    }
+                }
             )
         }
     ) { paddingValues ->
+
+        if (showDialog) {
+            TopicSelectionDialog(
+                profileViewModel = profileViewModel,
+                onDismissRequest = { showDialog = false },
+                onTopicSelected = { selectedTopic ->
+
+                    profileViewModel.setSelectedTopicIndex(selectedTopic)
+
+                    showDialog = false
+                }
+            )
+        }
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -61,10 +105,18 @@ fun AddTopicScreen(
                 modifier = Modifier.weight(1f)
             ) {
                 items(topics) { topic ->
-                    TopicItem(
-                        topic = topic,
-                        onRemove = { profileViewModel.removeTopic(it) }
-                    )
+                    Column {
+                        TopicItem(
+                            topic = topic,
+                            onRemove = { profileViewModel.removeTopic(it) }
+                        )
+                        Spacer(
+                            modifier = Modifier
+                                .height(1.dp)
+                                .fillMaxWidth()
+                                .background(Color.LightGray)
+                        )
+                    }
                 }
             }
 
@@ -95,6 +147,7 @@ fun AddTopicScreen(
                 }
             }
         }
+
     }
 }
 
