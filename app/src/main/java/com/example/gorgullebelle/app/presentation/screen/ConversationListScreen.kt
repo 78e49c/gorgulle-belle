@@ -15,6 +15,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -34,6 +36,7 @@ fun ConversationListScreen(
     profileViewModel: ProfileViewModel
 ) {
 
+    val systemMessageVisible by profileViewModel.systemMessageVisible.observeAsState(false)
     val expanded = remember { mutableStateOf(false) }
 
     Scaffold(
@@ -50,20 +53,25 @@ fun ConversationListScreen(
                         expanded = expanded.value,
                         onDismissRequest = { expanded.value = false }
                     ) {
-                        DropdownMenuItem(
-                            text = { Text("Sistem Mesajlarını Göster") },
-                            onClick = {
-                                profileViewModel.setSystemMessageVisible(true)
-                                expanded.value = false
-                            }
-                        )
-                        DropdownMenuItem(
-                            text = { Text("Sistem Mesajlarını Gizle") },
-                            onClick = {
-                                profileViewModel.setSystemMessageVisible(false)
-                                expanded.value = false
-                            }
-                        )
+                        if(systemMessageVisible)
+                        {
+                            DropdownMenuItem(
+                                text = { Text("Sistem Mesajlarını Gizle") },
+                                onClick = {
+                                    profileViewModel.setSystemMessageVisible(false)
+                                    expanded.value = false
+                                }
+                            )
+                        }
+                        else {
+                            DropdownMenuItem(
+                                text = { Text("Sistem Mesajlarını Göster") },
+                                onClick = {
+                                    profileViewModel.setSystemMessageVisible(true)
+                                    expanded.value = false
+                                }
+                            )
+                        }
                     }
                 }
             )
