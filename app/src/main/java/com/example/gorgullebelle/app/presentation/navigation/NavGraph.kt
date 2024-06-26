@@ -16,12 +16,14 @@ import com.example.gorgullebelle.app.presentation.screen.SignUpScreen
 import com.example.gorgullebelle.app.presentation.viewmodel.ChatManagerViewModel
 import com.example.gorgullebelle.app.presentation.viewmodel.ProfileViewModel
 import com.example.gorgullebelle.app.presentation.viewmodel.QuestionViewModel
+import com.example.gorgullebelle.app.presentation.viewmodel.UserViewModel
 
 @Composable
 fun NavGraph(
     chatManagerViewModel: ChatManagerViewModel,
     questionViewModel: QuestionViewModel,
-    profileViewModel: ProfileViewModel
+    profileViewModel: ProfileViewModel,
+    userViewModel: UserViewModel
 ) {
     val navController = rememberNavController()
 
@@ -31,6 +33,7 @@ fun NavGraph(
     ) {
         composable(Route.SignUpScreen.route) {
             SignUpScreen(
+                userViewModel = userViewModel,
                 navigate = { route ->
                     navController.navigate(route)
                 }
@@ -49,6 +52,7 @@ fun NavGraph(
 
         composable(Route.SignInScreen.route) {
             SignInScreen(
+                userViewModel = userViewModel,
                 navigate = { route ->
                     navController.navigate(route)
                 }
