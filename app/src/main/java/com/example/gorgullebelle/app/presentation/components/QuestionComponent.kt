@@ -280,10 +280,10 @@ fun QuestionCardItem(
 fun TopicSelectionDialog(
     profileViewModel: ProfileViewModel = viewModel(),
     onDismissRequest: () -> Unit,
-    onTopicSelected: (String) -> Unit
+    onTopicSelected: (Int) -> Unit
 ) {
     val topics by profileViewModel.topics.observeAsState(emptyList())
-    var selectedTopic by remember { mutableStateOf<String?>(null) }
+    var selectedTopicIndex by remember { mutableStateOf<Int?>(null) }
 
     Dialog(onDismissRequest = onDismissRequest) {
         Surface(
@@ -303,17 +303,17 @@ fun TopicSelectionDialog(
                 LazyColumn(
                     modifier = Modifier.weight(1f)
                 ) {
-                    items(topics) { topic ->
+                    itemsIndexed(topics) { index, topic ->
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(vertical = 8.dp)
-                                .clickable { selectedTopic = topic }
+                                .clickable { selectedTopicIndex = index }
                         ) {
                             RadioButton(
-                                selected = selectedTopic == topic,
-                                onClick = { selectedTopic = topic }
+                                selected = selectedTopicIndex == index,
+                                onClick = { selectedTopicIndex = index }
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(text = topic)
@@ -328,10 +328,10 @@ fun TopicSelectionDialog(
                 ) {
                     Button(
                         onClick = {
-                            selectedTopic?.let { onTopicSelected(it) }
+                            selectedTopicIndex?.let { onTopicSelected(it) }
                             onDismissRequest()
                         },
-                        enabled = selectedTopic != null
+                        enabled = selectedTopicIndex != null
                     ) {
                         Text("Seç")
                     }
@@ -340,6 +340,7 @@ fun TopicSelectionDialog(
         }
     }
 }
+
 
 
 
