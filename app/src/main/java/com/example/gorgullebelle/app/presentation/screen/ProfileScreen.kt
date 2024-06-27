@@ -5,25 +5,35 @@ import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FractionalThreshold
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.rememberSwipeableState
 import androidx.compose.material.swipeable
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,25 +42,25 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.gorgullebelle.R
-import com.example.gorgullebelle.app.presentation.components.ClickableLoginTextComponent
 import com.example.gorgullebelle.app.presentation.components.CustomTopAppBar
 import com.example.gorgullebelle.app.presentation.components.ProfileRow
 import com.example.gorgullebelle.app.presentation.navigation.Route
 import com.example.gorgullebelle.app.presentation.viewmodel.ProfileViewModel
+import com.example.gorgullebelle.app.presentation.viewmodel.UserViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
 fun ProfileScreen(
     navigate: (String) -> Unit = {},
-    profileViewModel: ProfileViewModel = viewModel()
+    profileViewModel: ProfileViewModel,
+    userViewModel: UserViewModel
 ) {
 
+    val onlineUser by userViewModel.onlineUser.collectAsState()
     val selectedTopic by profileViewModel.selectedTopic.observeAsState(0)
-    val score by profileViewModel.score.observeAsState(0)
-    val expanded = remember { mutableStateOf(false) }
+    var expanded by remember { mutableStateOf(false) }
 
     val swipeableState = rememberSwipeableState(initialValue = 0)
     val scope = rememberCoroutineScope()
@@ -71,7 +81,25 @@ fun ProfileScreen(
             topBar = {
                 CustomTopAppBar(
                     conversationTitle = "Kimlik",
-                    onBackPressed = { navigate(Route.DashboardScreen.route) }
+                    onBackPressed = { navigate(Route.DashboardScreen.route) },
+                    menuContent = {
+                        IconButton(onClick = { expanded = !expanded }) {
+                            Icon(Icons.Default.MoreVert, contentDescription = "Menu")
+                        }
+                        DropdownMenu(
+                            expanded = expanded,
+                            onDismissRequest = { expanded = false }
+                        ) {
+                            DropdownMenuItem(
+                                text = { Text(stringResource(id = R.string.out)) },
+                                onClick = {
+                                    userViewModel.signOut()
+                                    navigate(Route.SignInScreen.route)
+                                    expanded = false
+                                }
+                            )
+                        }
+                    }
                 )
             }
         ){ values ->
@@ -86,8 +114,9 @@ fun ProfileScreen(
                     verticalArrangement = Arrangement.spacedBy(40.dp)
                 ) {
 
+                    Spacer(modifier = Modifier.height(1.dp))
                     Text(
-                        text = "Salih Durak",
+                        text = onlineUser.name +" "+ onlineUser.surname,
                         color = Color.Black,
                         style = MaterialTheme.typography.titleLarge.copy(
                             fontWeight = FontWeight(600),
@@ -95,9 +124,11 @@ fun ProfileScreen(
                         )
                     )
 
+                    Spacer(modifier = Modifier.height(1.dp))
+
                     ProfileRow(
                         title = "Email",
-                        value = selectedTopic.toString()
+                        value = onlineUser.email
                     )
 
                     ProfileRow(
@@ -117,7 +148,7 @@ fun ProfileScreen(
 
                     ProfileRow(
                         title = "Puan",
-                        value = score.toString()
+                        value = onlineUser.score.toString()
                     )
                 }
 
@@ -126,12 +157,7 @@ fun ProfileScreen(
                         .align(Alignment.BottomCenter)
                         .padding(bottom = 40.dp)
                 ) {
-                    ClickableLoginTextComponent(
-                        navigate = navigate,
-                        route = Route.SignInScreen.route,
-                        stringResource(id = R.string.out),
-                        ""
-                    )
+
                 }
             }
         }
