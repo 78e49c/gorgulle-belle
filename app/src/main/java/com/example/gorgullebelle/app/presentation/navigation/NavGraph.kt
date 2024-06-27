@@ -63,6 +63,7 @@ fun NavGraph(
             ConversationScreen(
                 chatManagerViewModel = chatManagerViewModel,
                 profileViewModel = profileViewModel,
+                userViewModel = userViewModel,
                 navigate = { route ->
                     navController.navigate(route)
                 }
@@ -94,6 +95,7 @@ fun NavGraph(
             QuestionScreen(
                 questionViewModel = questionViewModel,
                 profileViewModel = profileViewModel,
+                userViewModel = userViewModel,
                 navigate = { route ->
                     navController.navigate(route)
                 },
