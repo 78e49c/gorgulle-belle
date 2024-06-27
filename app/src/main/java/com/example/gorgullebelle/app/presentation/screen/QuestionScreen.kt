@@ -45,6 +45,7 @@ import com.example.gorgullebelle.app.presentation.components.TopicSelectionDialo
 import com.example.gorgullebelle.app.presentation.navigation.Route
 import com.example.gorgullebelle.app.presentation.viewmodel.ProfileViewModel
 import com.example.gorgullebelle.app.presentation.viewmodel.QuestionViewModel
+import com.example.gorgullebelle.app.presentation.viewmodel.UserViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -54,7 +55,8 @@ import kotlinx.coroutines.launch
 fun QuestionScreen(
     navigate: (String) -> Unit,
     questionViewModel: QuestionViewModel,
-    profileViewModel: ProfileViewModel
+    profileViewModel: ProfileViewModel,
+    userViewModel: UserViewModel
 ) {
     val context = LocalContext.current
     val apiResponse by questionViewModel.apiResponse.observeAsState("")
@@ -180,8 +182,12 @@ fun QuestionScreen(
                                     snackbarMessage = questionAlreadySubmitted
                                 } else {
                                     if (selectedChoice != null) {
+
                                         profileViewModel.updateScore(selectedChoice.second)
+                                        userViewModel.updateScore(selectedChoice.second)
+
                                         snackbarMessage = "" + selectedChoice.second + questionPoints
+
                                     } else {
                                         snackbarMessage = questionSelect
                                     }
