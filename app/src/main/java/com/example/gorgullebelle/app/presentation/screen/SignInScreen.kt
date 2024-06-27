@@ -1,9 +1,5 @@
 package com.example.gorgullebelle.app.presentation.screen
 
-
-
-
-
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -87,10 +83,8 @@ fun SignInScreen(
                                 scaffoldState.snackbarHostState.showSnackbar(message, duration = SnackbarDuration.Short)
                             }
                             if (message == "Giriş başarılı") {
-                                val user = userViewModel.signIn(email, password)
-                                if (user != null) {
-                                    navigate.invoke(Route.ProfileScreen.route)
-                                }
+                                userViewModel.signIn(email, password)
+                                navigate(Route.ProfileScreen.route)
                             }
                         }
                     )
@@ -113,7 +107,7 @@ fun validateSignIn(email: String, password: String, userViewModel: UserViewModel
     return when {
         email.isEmpty() || password.isEmpty() -> "Boş alanları doldur"
         !Pattern.matches(emailPattern, email) -> "Geçerli bir email gir"
-        password.length < 8 -> "Geçerli bir şifre gir"
+        password.length < 8 -> "Şifre en az 8 karakter olmalı"
         userViewModel.signIn(email, password) == null -> "Giriş başarısız"
         else -> "Giriş başarılı"
     }
