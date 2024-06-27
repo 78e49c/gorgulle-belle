@@ -1,8 +1,5 @@
 package com.example.gorgullebelle.app.presentation.screen
 
-
-//noinspection UsingMaterialAndMaterial3Libraries
-
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -140,8 +137,8 @@ fun validateSignUp(name: String, surname: String, email: String, password: Strin
     return when {
         name.isEmpty() || surname.isEmpty() || email.isEmpty() || password.isEmpty() -> "Boş alanları doldur"
         !Pattern.matches(emailPattern, email) -> "Geçerli bir email gir"
-        password.length < 8 -> "Geçerli bir şifre gir"
-        userViewModel.emails.contains(email) -> "Zaten kayıtlısınız"
+        password.length < 8 -> "Şifre en az 8 karakter olmalı"
+        userViewModel.signIn(email, password) != null -> "Zaten kayıtlısınız"
         else -> "Kayıt oldunuz"
     }
 }
