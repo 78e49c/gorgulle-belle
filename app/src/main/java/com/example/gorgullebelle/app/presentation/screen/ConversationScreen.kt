@@ -35,6 +35,7 @@ import com.example.gorgullebelle.app.presentation.components.UserMessageBubble
 import com.example.gorgullebelle.app.presentation.navigation.Route
 import com.example.gorgullebelle.app.presentation.viewmodel.ChatManagerViewModel
 import com.example.gorgullebelle.app.presentation.viewmodel.ProfileViewModel
+import com.example.gorgullebelle.app.presentation.viewmodel.UserViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -44,6 +45,7 @@ import java.util.Locale
 fun ConversationScreen(
     chatManagerViewModel: ChatManagerViewModel,
     profileViewModel: ProfileViewModel,
+    userViewModel: UserViewModel,
     navigate: (String) -> Unit
 ) {
     val selectedPackageIndex by chatManagerViewModel.selectedPackageIndex.collectAsState()
@@ -84,7 +86,10 @@ fun ConversationScreen(
                                 text = { Text("Konuşmayı Sil") },
                                 onClick = {
                                     chatManagerViewModel.clearSessionMessages(selectedPackageIndex)
+
                                     profileViewModel.updateScore(50)
+                                    userViewModel.updateScore(50)
+
                                     expanded = false
                                 }
                             )
